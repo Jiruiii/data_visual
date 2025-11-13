@@ -20,8 +20,8 @@
                     非常適合展現<strong>多層級關聯關係</strong>和<strong>流向分布</strong>。
                 </p>
                 <p class="mb-0">
-                    <strong>本圖呈現：</strong>來源國 → 攻擊類型 → 目標埠號 三個層級的流向關係，
-                    讓我們清楚看到「哪些國家使用哪些攻擊手法針對哪些埠號」。
+                    <strong>本圖呈現：</strong>國家 → 攻擊類型 → 目標產業 三個層級的流向關係，
+                    讓我們清楚看到「哪些國家發生哪些攻擊手法並影響哪些產業」。
                 </p>
             </div>
             <div id="sankey-chart" class="loading">
@@ -34,11 +34,11 @@
                 <ul>
                     <li>
                         <strong>攻擊路徑追蹤：</strong>
-                        可以清楚看出特定國家偏好使用哪種攻擊類型，以及這些攻擊主要針對哪些埠號
+                        可以清楚看出特定國家發生哪種攻擊類型，以及這些攻擊主要影響哪些產業
                     </li>
                     <li>
                         <strong>關聯性分析：</strong>
-                        例如：某國家的 DDoS 攻擊主要針對 Port 80 (HTTP)，顯示其目標是網站服務
+                        例如：某國家的勒索軟體攻擊主要影響金融業，顯示針對性攻擊的特徵
                     </li>
                     <li>
                         <strong>資源分配：</strong>
@@ -55,7 +55,7 @@
                     <p class="mb-0">
                         相比傳統的表格或堆疊圖，Sankey 圖的<strong>視覺效果和故事性都超級強</strong>！
                         它不只展示資料，更展示資料之間的<strong>流動和關聯</strong>。
-                        在網路安全領域，理解「攻擊從哪來、用什麼手法、打哪個目標」的完整路徑至關重要。
+                        在網路安全領域，理解「哪些國家發生什麼攻擊、影響哪些產業」的完整路徑至關重要。
                     </p>
                 </div>
             </div>
@@ -64,7 +64,7 @@
         <!-- Treemap -->
         <div class="chart-container">
             <h3 class="chart-title">
-                <i class="fas fa-th"></i> Treemap：目標埠號攻擊分布
+                <i class="fas fa-th"></i> Treemap：目標產業與攻擊類型分布
             </h3>
             <div class="alert alert-primary">
                 <h6><i class="fas fa-info-circle"></i> 什麼是 Treemap (樹狀圖)？</h6>
@@ -73,8 +73,8 @@
                     非常適合展現<strong>部分與整體的關係</strong>和<strong>階層結構</strong>。
                 </p>
                 <p class="mb-0">
-                    <strong>本圖呈現：</strong>每個埠號被攻擊的次數，以及該埠號下不同攻擊類型的分布。
-                    大矩形 = 該埠號被攻擊次數多，內部小矩形 = 不同攻擊類型的佔比。
+                    <strong>本圖呈現：</strong>每個產業遭受的攻擊次數，以及該產業下不同攻擊類型的分布。
+                    大矩形 = 該產業被攻擊次數多，內部小矩形 = 不同攻擊類型的佔比。
                 </p>
             </div>
             <div id="treemap-chart" class="loading">
@@ -86,18 +86,18 @@
                 <h6><i class="fas fa-eye"></i> 從 Treemap 可以觀察到：</h6>
                 <ul>
                     <li>
-                        <strong>高風險埠號：</strong>
-                        面積最大的矩形代表被攻擊最多的埠號，例如：
+                        <strong>高風險產業：</strong>
+                        面積最大的矩形代表被攻擊最多的產業，例如：
                         <ul>
-                            <li>Port 80 (HTTP) - 網頁服務，容易成為 DDoS 目標</li>
-                            <li>Port 443 (HTTPS) - 加密網頁服務，同樣是攻擊熱點</li>
-                            <li>Port 22 (SSH) - 遠端登入服務，常遭受暴力破解攻擊</li>
-                            <li>Port 3306 (MySQL) - 資料庫服務，SQL Injection 的目標</li>
+                            <li>金融業 - 高價值目標，常遭受勒索軟體攻擊</li>
+                            <li>醫療業 - 敏感資料多，是資料外洩的主要目標</li>
+                            <li>政府部門 - 關鍵基礎設施，是 APT 攻擊重點</li>
+                            <li>科技產業 - 技術機密的主要目標</li>
                         </ul>
                     </li>
                     <li>
                         <strong>攻擊類型分布：</strong>
-                        點進每個埠號可看到不同顏色的子區塊，代表針對該埠號的不同攻擊類型
+                        點進每個產業可看到不同顏色的子區塊，代表針對該產業的不同攻擊類型
                     </li>
                     <li>
                         <strong>空間利用：</strong>

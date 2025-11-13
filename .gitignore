@@ -50,6 +50,11 @@ desktop.ini
 # Logs
 *.log
 
+# Backup files
+*.backup
+*.old
+*~
+
 # Kaggle API credentials - 絕對不要 commit！
 kaggle.json
 
