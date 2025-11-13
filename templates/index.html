@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="content-container" style="background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%); color: white;">
+        <div class="text-center py-5">
+            <h1 style="font-size: 3.5rem; font-weight: 800; color: white; margin-bottom: 20px;">
+                <i class="fas fa-shield-virus"></i> 全球網路安全威脅視覺化分析
+            </h1>
+            <h2 style="font-size: 2rem; color: rgba(255,255,255,0.9); margin-bottom: 30px;">
+                Global Cybersecurity Threats Analysis (2015-2024)
+            </h2>
+            <div class="mt-4" style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 15px; backdrop-filter: blur(10px);">
+                <h3 style="color: white; margin-bottom: 20px;">
+                    <i class="fas fa-users"></i> 專題資訊
+                </h3>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h4 style="color: #F093FB;">👥 組別與成員</h4>
+                        <p style="font-size: 1.1rem;">第 ___ 組</p>
+                        <p style="font-size: 1.1rem;">
+                            <strong>組員：</strong><br>
+                            學號 姓名<br>
+                            學號 姓名<br>
+                            學號 姓名<br>
+                            (請自行修改)
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h4 style="color: #F093FB;">📊 資料來源</h4>
+                        <p style="font-size: 1.1rem;">
+                            <strong>Kaggle Dataset:</strong><br>
+                            Global Cybersecurity Threats 2015-2024
+                        </p>
+                        <a href="https://www.kaggle.com/datasets/atharvasoundankar/global-cybersecurity-threats-2015-2024" 
+                           target="_blank" 
+                           class="btn btn-light btn-lg mt-2">
+                            <i class="fas fa-external-link-alt"></i> 查看資料集
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Introduction -->
+    <div class="content-container mt-4">
+        <div class="page-header">
+            <h2><i class="fas fa-info-circle"></i> 專題介紹</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body">
+                        <h4><i class="fas fa-bullseye" style="color: var(--primary-color);"></i> 研究目的</h4>
+                        <p class="mt-3">
+                            分析 2015-2024 年間全球網路安全威脅趨勢，透過資料視覺化技術，
+                            深入探討不同類型網路攻擊的分布特徵、時間變化趨勢，以及攻擊來源與目標的地理分布。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body">
+                        <h4><i class="fas fa-database" style="color: var(--success-color);"></i> 資料集介紹</h4>
+                        <p class="mt-3">
+                            本資料集包含十年間全球網路攻擊記錄，包括：攻擊時間、來源 IP、目標 IP、
+                            攻擊類型（DDoS、Port Scan、SQL Injection 等）、目標埠號、嚴重程度等欄位。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technologies Used -->
+    <div class="content-container mt-4">
+        <div class="page-header">
+            <h2><i class="fas fa-code"></i> 使用技術</h2>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="tech-card p-4">
+                    <i class="fab fa-python fa-4x mb-3" style="color: #3776AB;"></i>
+                    <h5>Python Flask</h5>
+                    <p>後端框架</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="tech-card p-4">
+                    <i class="fas fa-chart-line fa-4x mb-3" style="color: #3F4F75;"></i>
+                    <h5>Plotly.js</h5>
+                    <p>互動式圖表</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="tech-card p-4">
+                    <i class="fab fa-bootstrap fa-4x mb-3" style="color: #7952B3;"></i>
+                    <h5>Bootstrap 5</h5>
+                    <p>響應式設計</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="tech-card p-4">
+                    <i class="fab fa-html5 fa-4x mb-3" style="color: #E34F26;"></i>
+                    <h5>HTML/CSS/JS</h5>
+                    <p>前端技術</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Types -->
+    <div class="content-container mt-4">
+        <div class="page-header">
+            <h2><i class="fas fa-chart-pie"></i> 視覺化圖表</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <h5><i class="fas fa-check-circle" style="color: var(--success-color);"></i> 基本圖表 (4/4)</h5>
+                <ul class="list-group">
+                    <li class="list-group-item"><i class="fas fa-map"></i> 地圖 (Map) - 攻擊來源國分布</li>
+                    <li class="list-group-item"><i class="fas fa-chart-bar"></i> 長條圖 (Bar) - TOP 10 攻擊來源 IP</li>
+                    <li class="list-group-item"><i class="fas fa-chart-pie"></i> 圓餅圖 (Pie) - 攻擊類型佔比</li>
+                    <li class="list-group-item"><i class="fas fa-chart-line"></i> 折線圖 (Line) - 24小時攻擊趨勢</li>
+                </ul>
+            </div>
+            <div class="col-md-6 mb-3">
+                <h5><i class="fas fa-star" style="color: var(--accent-color);"></i> 進階圖表 (2/2)</h5>
+                <ul class="list-group">
+                    <li class="list-group-item"><i class="fas fa-project-diagram"></i> Sankey 圖 - 攻擊流向視覺化</li>
+                    <li class="list-group-item"><i class="fas fa-sitemap"></i> Treemap - 目標埠號攻擊分布</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Start -->
+    <div class="content-container mt-4">
+        <div class="page-header">
+            <h2><i class="fas fa-rocket"></i> 開始探索</h2>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="/overview" class="btn btn-lg btn-primary w-100 py-3" style="background: linear-gradient(135deg, #667EEA, #764BA2); border: none;">
+                    <i class="fas fa-chart-pie fa-2x mb-2"></i><br>
+                    資料概覽
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="/map" class="btn btn-lg btn-success w-100 py-3">
+                    <i class="fas fa-globe fa-2x mb-2"></i><br>
+                    地圖分析
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="/charts" class="btn btn-lg btn-info w-100 py-3">
+                    <i class="fas fa-chart-bar fa-2x mb-2"></i><br>
+                    基本圖表
+                </a>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="/advanced" class="btn btn-lg btn-warning w-100 py-3">
+                    <i class="fas fa-project-diagram fa-2x mb-2"></i><br>
+                    進階分析
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tech-card {
+        transition: all 0.3s ease;
+        border-radius: 15px;
+    }
+    .tech-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    .card {
+        transition: all 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+{% endblock %}

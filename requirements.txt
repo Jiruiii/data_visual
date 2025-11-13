@@ -1,0 +1,21 @@
+# 先安裝 numpy (pandas 編譯時需要)
+numpy>=1.24.0
+
+# Web 框架
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# 資料處理
+pandas>=2.0.0
+
+# 視覺化
+plotly==5.18.0
+
+# Kaggle API (用於自動下載資料集，選裝)
+kaggle
+
+# 環境變數管理
+python-dotenv
+
+# 其他相依套件
+python-dateutil==2.8.2

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="content-container">
+        <div class="page-header">
+            <h1><i class="fas fa-chart-bar"></i> 基本圖表分析</h1>
+            <p>使用長條圖、圓餅圖、折線圖深入分析攻擊資料</p>
+        </div>
+
+        <!-- Bar Chart: Top 10 IPs -->
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-chart-bar"></i> TOP 10 攻擊來源 IP
+            </h3>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>圖表說明：</strong>橫向長條圖顯示攻擊次數最多的 10 個來源 IP 位址，
+                條形長度代表攻擊次數，顏色深淺反映攻擊頻率。
+            </div>
+            <div id="top-ips-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="mt-3">
+                <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
+                <ul>
+                    <li><strong>集中度分析：</strong>如果攻擊高度集中在少數 IP，可能存在專業攻擊組織或殭屍網路</li>
+                    <li><strong>IP 類型：</strong>可進一步分析這些 IP 是否來自特定 ISP 或雲端服務供應商</li>
+                    <li><strong>防禦策略：</strong>針對高頻攻擊 IP 可建立黑名單，實施即時封鎖</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Pie Chart: Attack Types -->
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-chart-pie"></i> 不同攻擊類型佔比分析
+            </h3>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>圖表說明：</strong>圓餅圖展示各種攻擊類型（DDoS、Port Scan、SQL Injection 等）的相對比例，
+                幫助理解當前網路威脅的主要形式。
+            </div>
+            <div id="attack-types-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="mt-3">
+                <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
+                <ul>
+                    <li><strong>主流威脅：</strong>佔比最大的攻擊類型反映當前最普遍的網路威脅手法</li>
+                    <li><strong>多樣性：</strong>攻擊類型的多樣化程度顯示威脅環境的複雜性</li>
+                    <li><strong>DDoS 攻擊：</strong>通常佔比較高，因為發動成本低、影響範圍廣</li>
+                    <li><strong>Port Scan：</strong>常作為攻擊前的偵察手段，出現頻率也很高</li>
+                    <li><strong>SQL Injection：</strong>針對性較強，佔比可能較低但危害性高</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Line Chart: Time Series -->
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-chart-line"></i> 24小時攻擊次數變化趨勢
+            </h3>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>圖表說明：</strong>折線圖呈現一天內每個小時的攻擊次數變化，
+                可觀察攻擊活動的時間規律性。
+            </div>
+            <div id="time-series-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="mt-3">
+                <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
+                <ul>
+                    <li><strong>尖峰時段：</strong>攻擊次數的高峰期可能與攻擊者活躍時段或目標系統使用高峰有關</li>
+                    <li><strong>離峰時段：</strong>凌晨時段若攻擊減少，可能是人為操作的攻擊；若持平則可能是自動化攻擊</li>
+                    <li><strong>週期性：</strong>規律的波動顯示攻擊活動具有時間模式，可用於預測和防範</li>
+                    <li><strong>異常偵測：</strong>突然的尖峰可能代表大規模攻擊事件或特定目標遭受集中攻擊</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Overall Analysis -->
+        <div class="mt-4">
+            <h3><i class="fas fa-clipboard-check"></i> 綜合分析與假設驗證</h3>
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <h5 class="card-title">原始假設 vs 實際觀察</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>假設</th>
+                                    <th>驗證結果</th>
+                                    <th>可能原因</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>DDoS 是最常見的攻擊類型</td>
+                                    <td><span class="badge bg-success">✓ 符合</span></td>
+                                    <td>DDoS 攻擊工具易取得，攻擊成本低，效果顯著</td>
+                                </tr>
+                                <tr>
+                                    <td>攻擊在凌晨時段較少</td>
+                                    <td><span class="badge bg-warning">部分符合</span></td>
+                                    <td>自動化攻擊全天候進行，但人為操作的攻擊確實有時段性</td>
+                                </tr>
+                                <tr>
+                                    <td>少數 IP 負責大量攻擊</td>
+                                    <td><span class="badge bg-success">✓ 符合</span></td>
+                                    <td>可能存在殭屍網路或專業攻擊組織使用固定基礎設施</td>
+                                </tr>
+                                <tr>
+                                    <td>攻擊類型呈現多樣化</td>
+                                    <td><span class="badge bg-success">✓ 符合</span></td>
+                                    <td>攻擊者採用多種手法以提高成功率，繞過單一防禦機制</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Benefits -->
+        <div class="row mt-4">
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i> 
+                            長條圖的優勢
+                        </h5>
+                        <ul class="small">
+                            <li>直接比較數值大小</li>
+                            <li>快速識別排名順序</li>
+                            <li>適合呈現 TOP N 資料</li>
+                            <li>易於理解和解讀</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-pie" style="color: var(--success-color);"></i> 
+                            圓餅圖的優勢
+                        </h5>
+                        <ul class="small">
+                            <li>展現整體與部分關係</li>
+                            <li>一眼看出比例分配</li>
+                            <li>適合呈現組成結構</li>
+                            <li>視覺效果直觀</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 border-0 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-chart-line" style="color: var(--danger-color);"></i> 
+                            折線圖的優勢
+                        </h5>
+                        <ul class="small">
+                            <li>呈現時間序列趨勢</li>
+                            <li>觀察變化模式</li>
+                            <li>發現週期性規律</li>
+                            <li>預測未來趨勢</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Load Top 10 IPs chart
+    async function loadTopIPs() {
+        const chartDiv = document.getElementById('top-ips-chart');
+        try {
+            const response = await fetch('/api/top_ips');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('top-ips-chart', data.data, data.layout, {responsive: true});
+        } catch (error) {
+            console.error('Error loading top IPs:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入圖表失敗</div>';
+        }
+    }
+
+    // Load Attack Types chart
+    async function loadAttackTypes() {
+        const chartDiv = document.getElementById('attack-types-chart');
+        try {
+            const response = await fetch('/api/attack_types');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('attack-types-chart', data.data, data.layout, {responsive: true});
+        } catch (error) {
+            console.error('Error loading attack types:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入圖表失敗</div>';
+        }
+    }
+
+    // Load Time Series chart
+    async function loadTimeSeries() {
+        const chartDiv = document.getElementById('time-series-chart');
+        try {
+            const response = await fetch('/api/time_series');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('time-series-chart', data.data, data.layout, {responsive: true});
+        } catch (error) {
+            console.error('Error loading time series:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入圖表失敗</div>';
+        }
+    }
+
+    // Initialize all charts
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTopIPs();
+        loadAttackTypes();
+        loadTimeSeries();
+    });
+</script>
+{% endblock %}

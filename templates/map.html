@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="content-container">
+        <div class="page-header">
+            <h1><i class="fas fa-globe"></i> 全球攻擊來源地圖分析</h1>
+            <p>視覺化呈現網路攻擊的地理分布情況</p>
+        </div>
+
+        <!-- Map Chart -->
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-map-marked-alt"></i> 攻擊來源國分布圖
+            </h3>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>圖表說明：</strong>此地圖顯示全球各國作為攻擊來源的次數分布，
+                顏色越深表示該國發起的攻擊次數越多。請將滑鼠移至各國家上方查看詳細資訊。
+            </div>
+            <div id="map-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Observations -->
+        <div class="mt-4">
+            <h3><i class="fas fa-eye"></i> 視覺化觀察與分析</h3>
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-search"></i> 從地圖可以觀察到：</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>地理分布特徵：</strong>
+                            網路攻擊來源主要集中在網路基礎建設較發達的國家和地區
+                        </li>
+                        <li class="list-group-item">
+                            <strong>高風險區域：</strong>
+                            某些特定國家顯示出異常高的攻擊來源次數，可能是因為：
+                            <ul class="mt-2">
+                                <li>該國網路人口基數大</li>
+                                <li>存在組織化的網路犯罪團體</li>
+                                <li>網路安全法規相對寬鬆</li>
+                                <li>經濟或政治因素驅動</li>
+                            </ul>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>時間趨勢：</strong>
+                            結合時間序列資料可發現，攻擊來源的地理分布隨著時間推移有所變化，
+                            反映出網路威脅的動態性質
+                        </li>
+                        <li class="list-group-item">
+                            <strong>資安啟示：</strong>
+                            了解攻擊來源的地理分布，有助於企業和組織制定針對性的防禦策略，
+                            例如針對高風險地區加強防火牆規則和 IP 封鎖機制
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Map Visualization -->
+        <div class="alert alert-success mt-4">
+            <h5><i class="fas fa-question-circle"></i> 為什麼選擇地圖視覺化？</h5>
+            <p class="mb-0">
+                地圖視覺化能夠直觀地展現資料的<strong>地理分布特徵</strong>，讓觀眾快速理解：
+            </p>
+            <ul class="mt-2 mb-0">
+                <li>哪些國家是主要的攻擊來源</li>
+                <li>攻擊活動的全球分布情況</li>
+                <li>不同地區的相對威脅程度</li>
+                <li>地緣政治因素對網路安全的影響</li>
+            </ul>
+            <p class="mt-2 mb-0">
+                相比單純的列表或表格，地圖能提供更好的<strong>視覺記憶點</strong>和<strong>空間關聯性</strong>。
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Load map data
+    async function loadMapData() {
+        const chartDiv = document.getElementById('map-chart');
+        try {
+            const response = await fetch('/api/map_data');
+            const data = await response.json();
+            
+            // Remove loading state and spinner
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            
+            const layout = data.layout || {};
+            layout.autosize = true;
+            
+            Plotly.newPlot('map-chart', data.data, layout, {
+                responsive: true,
+                displayModeBar: true,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+                displaylogo: false
+            });
+        } catch (error) {
+            console.error('Error loading map data:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger"><i class="fas fa-exclamation-triangle"></i> 載入地圖失敗：' + error.message + '</div>';
+        }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadMapData();
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            Plotly.Plots.resize('map-chart');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="content-container">
+        <div class="page-header">
+            <h1><i class="fas fa-project-diagram"></i> 進階視覺化分析</h1>
+            <p>使用 Sankey 圖和 Treemap 進行深度資料探索</p>
+        </div>
+
+        <!-- Sankey Diagram -->
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-stream"></i> Sankey 圖：攻擊流向視覺化
+            </h3>
+            <div class="alert alert-primary">
+                <h6><i class="fas fa-info-circle"></i> 什麼是 Sankey 圖？</h6>
+                <p>
+                    Sankey 圖是一種<strong>流程圖</strong>，透過不同寬度的流動帶來表示數量的大小。
+                    非常適合展現<strong>多層級關聯關係</strong>和<strong>流向分布</strong>。
+                </p>
+                <p class="mb-0">
+                    <strong>本圖呈現：</strong>來源國 → 攻擊類型 → 目標埠號 三個層級的流向關係，
+                    讓我們清楚看到「哪些國家使用哪些攻擊手法針對哪些埠號」。
+                </p>
+            </div>
+            <div id="sankey-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h6><i class="fas fa-eye"></i> 從 Sankey 圖可以觀察到：</h6>
+                <ul>
+                    <li>
+                        <strong>攻擊路徑追蹤：</strong>
+                        可以清楚看出特定國家偏好使用哪種攻擊類型，以及這些攻擊主要針對哪些埠號
+                    </li>
+                    <li>
+                        <strong>關聯性分析：</strong>
+                        例如：某國家的 DDoS 攻擊主要針對 Port 80 (HTTP)，顯示其目標是網站服務
+                    </li>
+                    <li>
+                        <strong>資源分配：</strong>
+                        流向的寬度代表攻擊次數，寬度越大表示該路徑的攻擊越頻繁，需要優先防禦
+                    </li>
+                    <li>
+                        <strong>多維度洞察：</strong>
+                        單一圖表同時展現三個維度（來源、手法、目標），比分開看三張圖更有整體感
+                    </li>
+                </ul>
+                
+                <div class="alert alert-success mt-3">
+                    <h6><i class="fas fa-lightbulb"></i> 為什麼選擇 Sankey 圖？</h6>
+                    <p class="mb-0">
+                        相比傳統的表格或堆疊圖，Sankey 圖的<strong>視覺效果和故事性都超級強</strong>！
+                        它不只展示資料，更展示資料之間的<strong>流動和關聯</strong>。
+                        在網路安全領域，理解「攻擊從哪來、用什麼手法、打哪個目標」的完整路徑至關重要。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Treemap -->
+        <div class="chart-container">
+            <h3 class="chart-title">
+                <i class="fas fa-th"></i> Treemap：目標埠號攻擊分布
+            </h3>
+            <div class="alert alert-primary">
+                <h6><i class="fas fa-info-circle"></i> 什麼是 Treemap (樹狀圖)？</h6>
+                <p>
+                    Treemap 使用<strong>巢狀矩形</strong>來展示層級資料，矩形的大小代表數值的大小。
+                    非常適合展現<strong>部分與整體的關係</strong>和<strong>階層結構</strong>。
+                </p>
+                <p class="mb-0">
+                    <strong>本圖呈現：</strong>每個埠號被攻擊的次數，以及該埠號下不同攻擊類型的分布。
+                    大矩形 = 該埠號被攻擊次數多，內部小矩形 = 不同攻擊類型的佔比。
+                </p>
+            </div>
+            <div id="treemap-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h6><i class="fas fa-eye"></i> 從 Treemap 可以觀察到：</h6>
+                <ul>
+                    <li>
+                        <strong>高風險埠號：</strong>
+                        面積最大的矩形代表被攻擊最多的埠號，例如：
+                        <ul>
+                            <li>Port 80 (HTTP) - 網頁服務，容易成為 DDoS 目標</li>
+                            <li>Port 443 (HTTPS) - 加密網頁服務，同樣是攻擊熱點</li>
+                            <li>Port 22 (SSH) - 遠端登入服務，常遭受暴力破解攻擊</li>
+                            <li>Port 3306 (MySQL) - 資料庫服務，SQL Injection 的目標</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>攻擊類型分布：</strong>
+                        點進每個埠號可看到不同顏色的子區塊，代表針對該埠號的不同攻擊類型
+                    </li>
+                    <li>
+                        <strong>空間利用：</strong>
+                        相比長條圖或表格，Treemap 能在有限空間內展示更多層級的資訊
+                    </li>
+                    <li>
+                        <strong>視覺對比：</strong>
+                        矩形大小的對比非常直觀，一眼就能看出哪些埠號需要重點防護
+                    </li>
+                </ul>
+                
+                <div class="alert alert-success mt-3">
+                    <h6><i class="fas fa-lightbulb"></i> 為什麼選擇 Treemap？</h6>
+                    <p class="mb-0">
+                        Treemap 最大的優勢是<strong>一圖多訊</strong>（One view, multiple insights）！
+                        它同時展示：(1) 哪個埠號被攻擊最多 (2) 該埠號遭受哪些類型攻擊 (3) 各攻擊類型的佔比。
+                        而且視覺效果超級吸睛，很適合在簡報中使用，讓觀眾快速抓住重點。
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison: Basic vs Advanced Charts -->
+        <div class="mt-4">
+            <h3><i class="fas fa-balance-scale"></i> 基本圖表 vs 進階圖表</h3>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="card border-0 shadow h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">
+                                <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
+                                基本圖表
+                            </h5>
+                            <ul>
+                                <li><strong>優點：</strong>直觀易懂、製作簡單、通用性高</li>
+                                <li><strong>適用：</strong>單一維度或簡單比較</li>
+                                <li><strong>例如：</strong>長條圖比較數值、圓餅圖顯示佔比、折線圖呈現趨勢</li>
+                                <li><strong>限制：</strong>難以同時展現多個維度的關聯</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card border-0 shadow h-100" style="border-left: 5px solid var(--accent-color) !important;">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">
+                                <i class="fas fa-project-diagram" style="color: var(--accent-color);"></i>
+                                進階圖表
+                            </h5>
+                            <ul>
+                                <li><strong>優點：</strong>多維度關聯、層級結構清晰、視覺衝擊力強</li>
+                                <li><strong>適用：</strong>複雜關係、流程追蹤、階層分析</li>
+                                <li><strong>例如：</strong>Sankey 圖追蹤流向、Treemap 展現層級</li>
+                                <li><strong>特色：</strong>提供更深層的資料洞察和故事性</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insights Summary -->
+        <div class="card border-0 shadow mt-4" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+            <div class="card-body">
+                <h4><i class="fas fa-star"></i> 進階視覺化的價值</h4>
+                <p class="lead">
+                    Sankey 圖和 Treemap 不只是「漂亮的圖表」，它們能揭露基本圖表看不到的<strong>深層模式</strong>：
+                </p>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <h6>💡 Sankey 圖揭露</h6>
+                        <ul>
+                            <li>攻擊者的作戰模式</li>
+                            <li>來源-手法-目標的完整鏈條</li>
+                            <li>資源集中的關鍵路徑</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>💡 Treemap 揭露</h6>
+                        <ul>
+                            <li>防禦資源的優先順序</li>
+                            <li>埠號與攻擊類型的相關性</li>
+                            <li>整體威脅的結構分布</li>
+                        </ul>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0">
+                    <i class="fas fa-quote-left"></i>
+                    <em>
+                        資料視覺化的最終目的不是「畫圖」，而是「講故事」和「發現洞察」。
+                        進階圖表讓我們能夠用更有說服力的方式，傳達複雜的資料關係。
+                    </em>
+                    <i class="fas fa-quote-right"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Load Sankey diagram
+    async function loadSankey() {
+        const chartDiv = document.getElementById('sankey-chart');
+        try {
+            const response = await fetch('/api/sankey');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('sankey-chart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+        } catch (error) {
+            console.error('Error loading Sankey diagram:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入 Sankey 圖失敗：' + error.message + '</div>';
+        }
+    }
+
+    // Load Treemap
+    async function loadTreemap() {
+        const chartDiv = document.getElementById('treemap-chart');
+        try {
+            const response = await fetch('/api/treemap');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('treemap-chart', data.data, data.layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+        } catch (error) {
+            console.error('Error loading Treemap:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入 Treemap 失敗：' + error.message + '</div>';
+        }
+    }
+
+    // Initialize all charts
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSankey();
+        loadTreemap();
+    });
+</script>
+{% endblock %}

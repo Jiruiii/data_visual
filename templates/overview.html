@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="content-container">
+        <div class="page-header">
+            <h1><i class="fas fa-chart-pie"></i> 資料概覽與統計</h1>
+            <p>全球網路安全威脅資料集整體統計資訊</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row" id="stats-container">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #667EEA, #764BA2);">
+                    <i class="fas fa-database"></i>
+                    <h3 id="total-attacks">-</h3>
+                    <p>總攻擊次數</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                    <i class="fas fa-network-wired"></i>
+                    <h3 id="unique-ips">-</h3>
+                    <p>不重複來源 IP</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                    <i class="fas fa-globe-americas"></i>
+                    <h3 id="unique-countries">-</h3>
+                    <p>涉及國家數量</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                    <i class="fas fa-virus"></i>
+                    <h3 id="attack-types">-</h3>
+                    <p>攻擊類型總數</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Info -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-calendar-alt fa-3x mb-3" style="color: var(--primary-color);"></i>
+                        <h5>資料時間範圍</h5>
+                        <p class="lead" id="date-range">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3" style="color: var(--danger-color);"></i>
+                        <h5>最常見攻擊類型</h5>
+                        <p class="lead" id="most-common-attack">-</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card border-0 shadow h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-door-open fa-3x mb-3" style="color: var(--success-color);"></i>
+                        <h5>最常被攻擊埠號</h5>
+                        <p class="lead">Port <span id="most-targeted-port">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="chart-container">
+            <h3 class="chart-title"><i class="fas fa-chart-line"></i> 年度攻擊趨勢 (2015-2024)</h3>
+            <div id="yearly-trend-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title"><i class="fas fa-shield-alt"></i> 各攻擊類型的嚴重程度分布</h3>
+            <div id="severity-chart" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Processing Info -->
+        <div class="alert alert-info mt-4">
+            <h5><i class="fas fa-info-circle"></i> 資料前處理說明</h5>
+            <ul class="mb-0">
+                <li><strong>時間欄位處理：</strong>將 Timestamp 轉換為 datetime 格式，並提取年份、月份、小時等資訊</li>
+                <li><strong>資料清理：</strong>移除缺失值，確保資料完整性</li>
+                <li><strong>分類處理：</strong>將攻擊嚴重程度分為 Low、Medium、High、Critical 四個等級</li>
+                <li><strong>IP 地址處理：</strong>提取來源 IP 和目標 IP，用於統計分析</li>
+                <li><strong>國家代碼映射：</strong>將國家名稱標準化，用於地圖視覺化</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Load statistics
+    async function loadStatistics() {
+        try {
+            const response = await fetch('/api/statistics');
+            const data = await response.json();
+            
+            document.getElementById('total-attacks').textContent = data.total_attacks.toLocaleString();
+            document.getElementById('unique-ips').textContent = data.unique_source_ips.toLocaleString();
+            document.getElementById('unique-countries').textContent = data.unique_countries;
+            document.getElementById('attack-types').textContent = data.attack_types;
+            document.getElementById('date-range').textContent = data.date_range;
+            document.getElementById('most-common-attack').textContent = data.most_common_attack;
+            document.getElementById('most-targeted-port').textContent = data.most_targeted_port;
+        } catch (error) {
+            console.error('Error loading statistics:', error);
+        }
+    }
+
+    // Load yearly trend chart
+    async function loadYearlyTrend() {
+        const chartDiv = document.getElementById('yearly-trend-chart');
+        try {
+            const response = await fetch('/api/yearly_trend');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('yearly-trend-chart', data.data, data.layout, {responsive: true});
+        } catch (error) {
+            console.error('Error loading yearly trend:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入圖表失敗</div>';
+        }
+    }
+
+    // Load severity chart
+    async function loadSeverityChart() {
+        const chartDiv = document.getElementById('severity-chart');
+        try {
+            const response = await fetch('/api/severity_by_type');
+            const data = await response.json();
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = '';
+            Plotly.newPlot('severity-chart', data.data, data.layout, {responsive: true});
+        } catch (error) {
+            console.error('Error loading severity chart:', error);
+            chartDiv.classList.remove('loading');
+            chartDiv.innerHTML = 
+                '<div class="alert alert-danger">載入圖表失敗</div>';
+        }
+    }
+
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadStatistics();
+        loadYearlyTrend();
+        loadSeverityChart();
+    });
+</script>
+{% endblock %}
