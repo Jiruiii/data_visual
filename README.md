@@ -45,11 +45,8 @@ KAGGLE_KEY=3d36a94cc6b0f164d4161e8278fae9c7
 ### 步驟 4：安裝套件
 
 ```powershell
-# 使用 conda 安裝主要套件（避免編譯問題）
-conda install numpy pandas flask plotly -y
-
-# 使用 pip 安裝其他套件
-pip install kaggle python-dotenv python-dateutil Werkzeug
+# 直接從 requirements.txt 安裝所有套件
+pip install -r requirements.txt
 ```
 
 ### 步驟 5：執行專案
@@ -78,8 +75,7 @@ conda create -n data_visual python=3.11 -y
 conda activate data_visual
 
 # 安裝所有套件
-conda install numpy pandas flask plotly -y
-pip install kaggle python-dotenv python-dateutil Werkzeug
+pip install -r requirements.txt
 
 # 建立 .env（記得編輯內容！）
 copy .env.example .env
@@ -188,8 +184,7 @@ conda activate data_visual
 conda activate data_visual
 
 # 重新安裝套件
-conda install numpy pandas flask plotly -y
-pip install kaggle python-dotenv python-dateutil Werkzeug
+pip install -r requirements.txt
 ```
 
 ### 問題 5：Port 5000 被占用
