@@ -36,8 +36,8 @@ notepad .env
 
 在 `.env` 中填入**組長給你的 Kaggle 憑證**：
 ```
-KAGGLE_USERNAME=chenjirui
-KAGGLE_KEY=3d36a94cc6b0f164d4161e8278fae9c7
+KAGGLE_USERNAME=你的kaggle使用者名稱
+KAGGLE_KEY=你的kaggle_api_金鑰
 ```
 
 > ⚠️ 這些憑證應該由組長透過私訊（LINE/Discord）告訴你，**不要公開分享！**
