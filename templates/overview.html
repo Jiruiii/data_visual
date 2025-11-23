@@ -1,169 +1,551 @@
-{% extends "base.html" %}
-
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container">
-    <div class="content-container">
-        <div class="page-header">
-            <h1><i class="fas fa-chart-pie"></i> 資料概覽與統計</h1>
-            <p>全球網路安全威脅資料集整體統計資訊</p>
-        </div>
-
-        <!-- Statistics Cards -->
-        <div class="row" id="stats-container">
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card" style="background: linear-gradient(135deg, #667EEA, #764BA2);">
-                    <i class="fas fa-database"></i>
-                    <h3 id="total-attacks">-</h3>
-                    <p>總攻擊次數</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
-                    <i class="fas fa-network-wired"></i>
-                    <h3 id="unique-ips">-</h3>
-                    <p>不重複來源 IP</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3 id="unique-countries">-</h3>
-                    <p>涉及國家數量</p>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
-                    <i class="fas fa-virus"></i>
-                    <h3 id="attack-types">-</h3>
-                    <p>攻擊類型總數</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Additional Info -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-calendar-alt fa-3x mb-3" style="color: var(--primary-color);"></i>
-                        <h5>資料時間範圍</h5>
-                        <p class="lead" id="date-range">-</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-exclamation-triangle fa-3x mb-3" style="color: var(--danger-color);"></i>
-                        <h5>最常見攻擊類型</h5>
-                        <p class="lead" id="most-common-attack">-</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card border-0 shadow h-100">
-                    <div class="card-body text-center">
-                        <i class="fas fa-door-open fa-3x mb-3" style="color: var(--success-color);"></i>
-                        <h5>最常被攻擊埠號</h5>
-                        <p class="lead">Port <span id="most-targeted-port">-</span></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Charts -->
-        <div class="chart-container">
-            <h3 class="chart-title"><i class="fas fa-chart-line"></i> 年度攻擊趨勢 (2015-2024)</h3>
-            <div id="yearly-trend-chart" class="loading">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="chart-container">
-            <h3 class="chart-title"><i class="fas fa-shield-alt"></i> 各攻擊類型的嚴重程度分布</h3>
-            <div id="severity-chart" class="loading">
-                <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Data Processing Info -->
-        <div class="alert alert-info mt-4">
-            <h5><i class="fas fa-info-circle"></i> 資料前處理說明</h5>
-            <ul class="mb-0">
-                <li><strong>時間欄位處理：</strong>將 Timestamp 轉換為 datetime 格式，並提取年份、月份、小時等資訊</li>
-                <li><strong>資料清理：</strong>移除缺失值，確保資料完整性</li>
-                <li><strong>分類處理：</strong>將攻擊嚴重程度分為 Low、Medium、High、Critical 四個等級</li>
-                <li><strong>IP 地址處理：</strong>提取來源 IP 和目標 IP，用於統計分析</li>
-                <li><strong>國家代碼映射：</strong>將國家名稱標準化，用於地圖視覺化</li>
-            </ul>
-        </div>
+  <div class="content-container">
+    <div class="page-header">
+      <h1><i class="fas fa-chart-pie"></i> 資料概覽與統計</h1>
+      <p>全球網路安全威脅資料集整體統計資訊</p>
     </div>
+
+    <!-- Statistics Cards -->
+    <div class="row" id="stats-container">
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #667eea, #764ba2)"
+        >
+          <i class="fas fa-database"></i>
+          <h3 id="total-attacks">-</h3>
+          <p>總攻擊次數</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #f093fb, #f5576c)"
+        >
+          <i class="fas fa-network-wired"></i>
+          <h3 id="unique-ips">-</h3>
+          <p>不重複來源 IP</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #4facfe, #00f2fe)"
+        >
+          <i class="fas fa-globe-americas"></i>
+          <h3 id="unique-countries">-</h3>
+          <p>涉及國家數量</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div
+          class="stat-card"
+          style="background: linear-gradient(135deg, #43e97b, #38f9d7)"
+        >
+          <i class="fas fa-virus"></i>
+          <h3 id="attack-types">-</h3>
+          <p>攻擊類型總數</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional Info -->
+    <div class="row mb-4">
+      <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body text-center">
+            <i
+              class="fas fa-calendar-alt fa-3x mb-3"
+              style="color: var(--primary-color)"
+            ></i>
+            <h5>資料時間範圍</h5>
+            <p class="lead" id="date-range">-</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body text-center">
+            <i
+              class="fas fa-exclamation-triangle fa-3x mb-3"
+              style="color: var(--danger-color)"
+            ></i>
+            <h5>最常見攻擊類型</h5>
+            <p class="lead" id="most-common-attack">-</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body text-center">
+            <i
+              class="fas fa-door-open fa-3x mb-3"
+              style="color: var(--success-color)"
+            ></i>
+            <h5>最常被攻擊目標</h5>
+            <p class="lead" id="most-targeted-port">-</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Line Chart: Time Series -->
+    <div class="chart-container">
+      <h3 class="chart-title">
+        <i class="fas fa-chart-line"></i> 2015-2024 年度攻擊趨勢變化
+      </h3>
+
+      <!-- Country Filter Controls for Time Series -->
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-body">
+          <div class="row align-items-end">
+            <div class="col-md-4">
+              <label class="form-label fw-bold">
+                <i class="fas fa-globe"></i> 選擇國家：
+              </label>
+              <select id="timeseries-country-select" class="form-select">
+                <option value="all" selected>全部國家</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-bold">
+                <i class="fas fa-chart-line"></i> 顯示模式：
+              </label>
+              <select id="chart-mode-select" class="form-select">
+                <option value="single" selected>單一國家</option>
+                <option value="compare">多國比較（最多5個）</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <button
+                id="apply-timeseries-filter"
+                class="btn btn-primary w-100"
+              >
+                <i class="fas fa-sync"></i> 更新圖表
+              </button>
+            </div>
+          </div>
+
+          <!-- Multi-country selection -->
+          <div id="multi-country-select" class="row mt-3" style="display: none">
+            <div class="col-md-12">
+              <label class="form-label fw-bold">
+                <i class="fas fa-list-check"></i> 選擇要比較的國家（最多5個）：
+              </label>
+              <select
+                id="timeseries-multi-country"
+                class="form-select"
+                multiple
+                size="8"
+              ></select>
+              <small class="text-muted">按住 Ctrl 或 Cmd 可多選</small>
+            </div>
+          </div>
+
+          <div class="mt-2">
+            <small class="text-muted">
+              <i class="fas fa-info-circle"></i>
+              <span id="timeseries-hint"
+                >選擇特定國家可查看該國的年度攻擊趨勢變化</span
+              >
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <strong>圖表說明：</strong>
+        <span id="timeseries-description">
+          折線圖呈現 2015 到 2024
+          年間每年的攻擊次數變化，可觀察長期趨勢和年度波動。
+        </span>
+      </div>
+
+      <!-- Statistics Panel for Time Series -->
+      <div class="row mb-3" id="timeseries-stats-panel" style="display: none">
+        <div class="col-md-2">
+          <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">分析國家</h6>
+              <h5 id="timeseries-country-name" class="text-primary">全部</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">總攻擊次數</h6>
+              <h5 id="timeseries-total" class="text-danger">-</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">年均攻擊</h6>
+              <h5 id="timeseries-avg" class="text-warning">-</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">攻擊增長</h6>
+              <h5 id="timeseries-trend" class="text-success">-</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">總損失</h6>
+              <h5 id="timeseries-total-loss" class="text-danger">-</h5>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="card text-center border-0 shadow-sm">
+            <div class="card-body">
+              <h6 class="text-muted">損失增長</h6>
+              <h5 id="timeseries-loss-trend" class="text-info">-</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="time-series-chart" class="loading">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
+        <ul>
+          <li>
+            <strong>長期趨勢：</strong>觀察攻擊次數是逐年上升、下降還是保持穩定
+          </li>
+          <li>
+            <strong>尖峰年份：</strong
+            >找出攻擊次數的高峰年份，可能與重大安全事件相關
+          </li>
+          <li>
+            <strong>國家差異：</strong
+            >不同國家的攻擊趨勢可能截然不同，反映地區性威脅演變
+          </li>
+          <li>
+            <strong>財務損失關聯：</strong
+            >比較攻擊次數與財務損失的關係，評估攻擊的經濟影響
+          </li>
+          <li>
+            <strong>損失趨勢：</strong
+            >財務損失的增長率可能高於或低於攻擊次數，反映攻擊複雜度變化
+          </li>
+          <li>
+            <strong>多國比較：</strong
+            >對比多個國家可發現哪些地區的網路安全狀況相對穩定
+          </li>
+        </ul>
+
+        <div class="alert alert-warning mt-3">
+          <i class="fas fa-info-circle"></i>
+          <strong>提示：</strong>
+          在單一國家模式下，紅色實線代表攻擊事件數（左 Y
+          軸），藍色虛線代表財務損失（右 Y 軸），
+          可觀察兩者之間的關聯性。多國比較模式僅顯示攻擊次數對比。
+        </div>
+      </div>
+    </div>
+
+    <!-- Severity Chart -->
+    <div class="chart-container">
+      <h3 class="chart-title">
+        <i class="fas fa-shield-alt"></i> 各攻擊類型的安全漏洞分布
+      </h3>
+      <div id="severity-chart" class="loading">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data Processing Info -->
+    <div class="alert alert-info mt-4">
+      <h5><i class="fas fa-info-circle"></i> 資料前處理說明</h5>
+      <ul class="mb-0">
+        <li>
+          <strong>時間欄位處理：</strong>將 Timestamp 轉換為 datetime
+          格式，並提取年份、月份、小時等資訊
+        </li>
+        <li><strong>資料清理：</strong>移除缺失值，確保資料完整性</li>
+        <li>
+          <strong>分類處理：</strong>將攻擊嚴重程度分為
+          Low、Medium、High、Critical 四個等級
+        </li>
+        <li>
+          <strong>IP 地址處理：</strong>提取來源 IP 和目標 IP，用於統計分析
+        </li>
+        <li><strong>國家代碼映射：</strong>將國家名稱標準化，用於地圖視覺化</li>
+      </ul>
+    </div>
+  </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <script>
-    // Load statistics
-    async function loadStatistics() {
-        try {
-            const response = await fetch('/api/statistics');
-            const data = await response.json();
-            
-            document.getElementById('total-attacks').textContent = data.total_attacks.toLocaleString();
-            document.getElementById('unique-ips').textContent = data.unique_source_ips.toLocaleString();
-            document.getElementById('unique-countries').textContent = data.unique_countries;
-            document.getElementById('attack-types').textContent = data.attack_types;
-            document.getElementById('date-range').textContent = data.date_range;
-            document.getElementById('most-common-attack').textContent = data.most_common_attack;
-            document.getElementById('most-targeted-port').textContent = data.most_targeted_port;
-        } catch (error) {
-            console.error('Error loading statistics:', error);
-        }
+  let availableCountries = [];
+  let currentTimeSeriesCountry = "all";
+  let currentChartMode = "single";
+
+  // Load available countries
+  async function loadCountries() {
+    try {
+      const response = await fetch("/api/countries");
+      const data = await response.json();
+      availableCountries = data.countries || [];
+
+      // Populate country select for time series (single)
+      const timeseriesCountrySelect = document.getElementById(
+        "timeseries-country-select"
+      );
+      availableCountries.forEach((country) => {
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        timeseriesCountrySelect.appendChild(option);
+      });
+
+      // Populate country select for time series (multi)
+      const timeseriesMultiSelect = document.getElementById(
+        "timeseries-multi-country"
+      );
+      availableCountries.forEach((country) => {
+        const option = document.createElement("option");
+        option.value = country;
+        option.textContent = country;
+        timeseriesMultiSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error loading countries:", error);
+    }
+  }
+
+  // Load Time Series chart
+  async function loadTimeSeries(
+    country = "all",
+    countries = [],
+    mode = "single"
+  ) {
+    const chartDiv = document.getElementById("time-series-chart");
+    const statsPanel = document.getElementById("timeseries-stats-panel");
+
+    try {
+      chartDiv.classList.add("loading");
+      chartDiv.innerHTML =
+        '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+      const params = new URLSearchParams();
+
+      if (mode === "compare" && countries.length > 0) {
+        params.append("countries", countries.join(","));
+        params.append("mode", "compare");
+      } else if (country !== "all") {
+        params.append("country", country);
+      }
+
+      const response = await fetch(`/api/time_series?${params.toString()}`);
+      const data = await response.json();
+
+      chartDiv.classList.remove("loading");
+      chartDiv.innerHTML = "";
+
+      const enhancedLayout = {
+        ...data.layout,
+        hovermode: "x unified",
+        hoverlabel: {
+          bgcolor: "white",
+          bordercolor: "#333",
+          font: { size: 14 },
+        },
+      };
+
+      Plotly.newPlot("time-series-chart", data.data, enhancedLayout, {
+        responsive: true,
+        displayModeBar: true,
+      });
+
+      updateTimeSeriesDescription(country, countries, mode);
+
+      if (data.statistics && mode === "single") {
+        updateTimeSeriesStatistics(data.statistics, country);
+        statsPanel.style.display = "flex";
+      } else {
+        statsPanel.style.display = "none";
+      }
+    } catch (error) {
+      console.error("Error loading time series:", error);
+      chartDiv.classList.remove("loading");
+      chartDiv.innerHTML =
+        '<div class="alert alert-danger">載入圖表失敗：' +
+        error.message +
+        "</div>";
+    }
+  }
+
+  function updateTimeSeriesDescription(country, countries, mode) {
+    const descSpan = document.getElementById("timeseries-description");
+    if (mode === "compare" && countries.length > 0) {
+      descSpan.textContent = `折線圖呈現 ${countries.join("、")} 等 ${
+        countries.length
+      } 個國家在 2015-2024 年間的攻擊次數變化對比。`;
+    } else if (country === "all") {
+      descSpan.textContent =
+        "折線圖呈現全球 2015 到 2024 年間每年的攻擊次數變化，可觀察長期趨勢和年度波動。";
+    } else {
+      descSpan.textContent = `折線圖呈現 ${country} 在 2015 到 2024 年間每年的攻擊次數變化，可觀察該國的長期趨勢和年度波動。`;
+    }
+  }
+
+  function updateTimeSeriesStatistics(stats, country) {
+    document.getElementById("timeseries-country-name").textContent =
+      country === "all" ? "全部" : country;
+    document.getElementById("timeseries-total").textContent = stats.total
+      ? stats.total.toLocaleString()
+      : "-";
+    document.getElementById("timeseries-avg").textContent = stats.average
+      ? Math.round(stats.average).toLocaleString()
+      : "-";
+
+    // 攻擊趨勢
+    const trendElement = document.getElementById("timeseries-trend");
+    if (stats.trend > 0) {
+      trendElement.textContent = `↑ ${stats.trend.toFixed(1)}%`;
+      trendElement.className = "text-danger";
+    } else if (stats.trend < 0) {
+      trendElement.textContent = `↓ ${Math.abs(stats.trend).toFixed(1)}%`;
+      trendElement.className = "text-success";
+    } else {
+      trendElement.textContent = "→ 持平";
+      trendElement.className = "text-secondary";
     }
 
-    // Load yearly trend chart
-    async function loadYearlyTrend() {
-        const chartDiv = document.getElementById('yearly-trend-chart');
-        try {
-            const response = await fetch('/api/yearly_trend');
-            const data = await response.json();
-            chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = '';
-            Plotly.newPlot('yearly-trend-chart', data.data, data.layout, {responsive: true});
-        } catch (error) {
-            console.error('Error loading yearly trend:', error);
-            chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = 
-                '<div class="alert alert-danger">載入圖表失敗</div>';
-        }
-    }
+    // 財務損失統計
+    document.getElementById("timeseries-total-loss").textContent =
+      stats.total_loss ? `$${stats.total_loss.toFixed(1)}M` : "-";
 
-    // Load severity chart
-    async function loadSeverityChart() {
-        const chartDiv = document.getElementById('severity-chart');
-        try {
-            const response = await fetch('/api/severity_by_type');
-            const data = await response.json();
-            chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = '';
-            Plotly.newPlot('severity-chart', data.data, data.layout, {responsive: true});
-        } catch (error) {
-            console.error('Error loading severity chart:', error);
-            chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = 
-                '<div class="alert alert-danger">載入圖表失敗</div>';
-        }
+    // 損失趨勢
+    const lossTrendElement = document.getElementById("timeseries-loss-trend");
+    if (stats.loss_trend > 0) {
+      lossTrendElement.textContent = `↑ ${stats.loss_trend.toFixed(1)}%`;
+      lossTrendElement.className = "text-danger";
+    } else if (stats.loss_trend < 0) {
+      lossTrendElement.textContent = `↓ ${Math.abs(stats.loss_trend).toFixed(
+        1
+      )}%`;
+      lossTrendElement.className = "text-success";
+    } else {
+      lossTrendElement.textContent = "→ 持平";
+      lossTrendElement.className = "text-secondary";
     }
+  }
 
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-        loadStatistics();
-        loadYearlyTrend();
-        loadSeverityChart();
-    });
+  // Load statistics
+  async function loadStatistics() {
+    try {
+      const response = await fetch("/api/statistics");
+      const data = await response.json();
+
+      document.getElementById("total-attacks").textContent =
+        data.total_attacks.toLocaleString();
+      document.getElementById("unique-ips").textContent =
+        data.unique_source_ips.toLocaleString();
+      document.getElementById("unique-countries").textContent =
+        data.unique_countries;
+      document.getElementById("attack-types").textContent = data.attack_types;
+      document.getElementById("date-range").textContent = data.date_range;
+      document.getElementById("most-common-attack").textContent =
+        data.most_common_attack;
+      document.getElementById("most-targeted-port").textContent =
+        data.most_targeted_port;
+    } catch (error) {
+      console.error("Error loading statistics:", error);
+    }
+  }
+
+  // Load severity chart
+  async function loadSeverityChart() {
+    const chartDiv = document.getElementById("severity-chart");
+    try {
+      const response = await fetch("/api/severity_by_type");
+      const data = await response.json();
+      chartDiv.classList.remove("loading");
+      chartDiv.innerHTML = "";
+      Plotly.newPlot("severity-chart", data.data, data.layout, {
+        responsive: true,
+      });
+    } catch (error) {
+      console.error("Error loading severity chart:", error);
+      chartDiv.classList.remove("loading");
+      chartDiv.innerHTML = '<div class="alert alert-danger">載入圖表失敗</div>';
+    }
+  }
+
+  // Initialize
+  document.addEventListener("DOMContentLoaded", function () {
+    loadCountries();
+    loadStatistics();
+    loadTimeSeries(currentTimeSeriesCountry);
+    loadSeverityChart();
+
+    // Time series mode change
+    document
+      .getElementById("chart-mode-select")
+      .addEventListener("change", function () {
+        currentChartMode = this.value;
+        const multiSelectDiv = document.getElementById("multi-country-select");
+        const singleSelect = document.getElementById(
+          "timeseries-country-select"
+        );
+        const hintSpan = document.getElementById("timeseries-hint");
+
+        if (currentChartMode === "compare") {
+          multiSelectDiv.style.display = "block";
+          singleSelect.disabled = true;
+          hintSpan.textContent = "選擇 2-5 個國家進行趨勢對比分析";
+        } else {
+          multiSelectDiv.style.display = "none";
+          singleSelect.disabled = false;
+          hintSpan.textContent = "選擇特定國家可查看該國的年度攻擊趨勢變化";
+        }
+      });
+
+    // Time series filter apply
+    document
+      .getElementById("apply-timeseries-filter")
+      .addEventListener("click", function () {
+        if (currentChartMode === "compare") {
+          const selectedCountries = Array.from(
+            document.getElementById("timeseries-multi-country").selectedOptions
+          ).map((opt) => opt.value);
+
+          if (selectedCountries.length === 0) {
+            alert("請至少選擇一個國家");
+            return;
+          }
+          if (selectedCountries.length > 5) {
+            alert("最多只能選擇 5 個國家");
+            return;
+          }
+
+          loadTimeSeries("all", selectedCountries, "compare");
+        } else {
+          currentTimeSeriesCountry = document.getElementById(
+            "timeseries-country-select"
+          ).value;
+          loadTimeSeries(currentTimeSeriesCountry, [], "single");
+        }
+      });
+  });
 </script>
 {% endblock %}
