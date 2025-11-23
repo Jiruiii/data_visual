@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import pandas as pd
 import plotly.graph_objs as go
 import plotly.express as px
@@ -116,15 +116,49 @@ def get_map_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/countries')
+def get_countries():
+    """取得所有可用的國家列表"""
+    try:
+        df = df_global.copy()
+        countries = sorted(df['Country'].unique().tolist())
+        return jsonify({'countries': countries})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/top_ips')
 def get_top_ips():
-    """長條圖：TOP 10 受影響使用者最多的事件"""
+    """長條圖：TOP N 受影響使用者最多的事件（支援國家篩選）"""
     try:
         df = df_global.copy()
         
-        # 取 TOP 10 受影響使用者最多的記錄
-        top_incidents = df.nlargest(10, 'Number of Affected Users')[['Country', 'Attack Type', 'Number of Affected Users']]
+        country = request.args.get('country', 'all')
+        top_n = int(request.args.get('top_n', 10))
+        
+        if country != 'all':
+            df = df[df['Country'] == country]
+        
+        if df.empty:
+            return jsonify({
+                'data': [],
+                'layout': {},
+                'statistics': {
+                    'total_events': 0,
+                    'total_users': 0,
+                    'avg_impact': 0
+                }
+            })
+        
+        top_incidents = df.nlargest(top_n, 'Number of Affected Users')[
+            ['Country', 'Attack Type', 'Number of Affected Users']
+        ]
         top_incidents['Label'] = top_incidents['Country'] + ' - ' + top_incidents['Attack Type']
+        
+        statistics = {
+            'total_events': len(df),
+            'total_users': int(df['Number of Affected Users'].sum()),
+            'avg_impact': float(df['Number of Affected Users'].mean())
+        }
         
         fig = go.Figure(data=[
             go.Bar(
@@ -134,23 +168,152 @@ def get_top_ips():
                 marker=dict(
                     color=top_incidents['Number of Affected Users'],
                     colorscale='Viridis',
-                    showscale=True
+                    showscale=True,
+                    colorbar=dict(title='影響人數')
                 ),
-                text=top_incidents['Number of Affected Users'],
+                text=top_incidents['Number of Affected Users'].apply(lambda x: f'{x:,.0f}'),
                 textposition='auto',
+                hovertemplate='<b>%{y}</b><br>受影響使用者: %{x:,.0f}<extra></extra>'
             )
         ])
         
+        title = f'TOP {top_n} 受影響使用者最多的網路攻擊事件'
+        if country != 'all':
+            title = f'{country} - {title}'
+        
         fig.update_layout(
-            title='TOP 10 受影響使用者最多的網路攻擊事件',
+            title=title,
             xaxis_title='受影響使用者數量',
             yaxis_title='國家 - 攻擊類型',
             height=500,
             font=dict(family="Microsoft JhengHei, Arial", size=12),
-            yaxis={'categoryorder': 'total ascending'}
+            yaxis={'categoryorder': 'total ascending'},
+            hovermode='closest'
         )
         
-        return jsonify(json.loads(fig.to_json()))
+        return jsonify({
+            'data': json.loads(fig.to_json())['data'],
+            'layout': json.loads(fig.to_json())['layout'],
+            'statistics': statistics
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/time_series')
+def get_time_series():
+    """折線圖：年度攻擊趨勢（支援單一國家或多國比較）"""
+    try:
+        df = df_global.copy()
+        
+        country = request.args.get('country', 'all')
+        countries_param = request.args.get('countries', '')
+        mode = request.args.get('mode', 'single')
+        
+        fig = go.Figure()
+        
+        if mode == 'compare' and countries_param:
+            # 多國比較模式
+            countries = [c.strip() for c in countries_param.split(',') if c.strip()]
+            
+            colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8']
+            
+            for idx, country_name in enumerate(countries[:5]):  # 最多5個國家
+                country_df = df[df['Country'] == country_name]
+                if not country_df.empty:
+                    yearly_counts = country_df.groupby('Year').size().reset_index(name='Count')
+                    
+                    fig.add_trace(go.Scatter(
+                        x=yearly_counts['Year'],
+                        y=yearly_counts['Count'],
+                        mode='lines+markers',
+                        name=country_name,
+                        line=dict(color=colors[idx % len(colors)], width=3),
+                        marker=dict(size=8),
+                        hovertemplate=f'<b>{country_name}</b><br>年份: %{{x}}<br>攻擊次數: %{{y:,.0f}}<extra></extra>'
+                    ))
+            
+            title = f'{len(countries)} 個國家年度攻擊趨勢比較 (2015-2024)'
+            
+            fig.update_layout(
+                title=title,
+                xaxis_title='年份',
+                yaxis_title='攻擊事件數量',
+                height=500,
+                font=dict(family="Microsoft JhengHei, Arial", size=12),
+                hovermode='x unified',
+                legend=dict(x=0.01, y=0.99, bgcolor='rgba(255,255,255,0.8)'),
+                xaxis=dict(tickmode='linear', dtick=1)
+            )
+            
+            return jsonify(json.loads(fig.to_json()))
+            
+        else:
+            # 單一國家或全球模式
+            if country != 'all':
+                df = df[df['Country'] == country]
+            
+            if df.empty:
+                return jsonify({'data': [], 'layout': {}, 'statistics': {}})
+            
+            yearly_counts = df.groupby('Year').size().reset_index(name='Count')
+            
+            # 計算統計數據
+            total = yearly_counts['Count'].sum()
+            average = yearly_counts['Count'].mean()
+            
+            # 計算趨勢（首尾年份增長率）
+            if len(yearly_counts) >= 2:
+                first_year_count = yearly_counts.iloc[0]['Count']
+                last_year_count = yearly_counts.iloc[-1]['Count']
+                if first_year_count > 0:
+                    trend = ((last_year_count - first_year_count) / first_year_count) * 100
+                else:
+                    trend = 0
+            else:
+                trend = 0
+            
+            statistics = {
+                'total': int(total),
+                'average': float(average),
+                'trend': float(trend)
+            }
+            
+            fig.add_trace(go.Scatter(
+                x=yearly_counts['Year'],
+                y=yearly_counts['Count'],
+                mode='lines+markers',
+                name='攻擊事件數',
+                line=dict(color='#FF6B6B', width=4),
+                marker=dict(size=10),
+                fill='tozeroy',
+                fillcolor='rgba(255, 107, 107, 0.2)',
+                hovertemplate='<b>%{x}年</b><br>攻擊次數: %{y:,.0f}<extra></extra>'
+            ))
+            
+            title = '2015-2024 年度網路攻擊趨勢變化'
+            if country != 'all':
+                title = f'{country} - {title}'
+            
+            fig.update_layout(
+                title=title,
+                xaxis_title='年份',
+                yaxis_title='攻擊事件數量',
+                height=500,
+                font=dict(family="Microsoft JhengHei, Arial", size=12),
+                hovermode='x unified',
+                xaxis=dict(
+                    tickmode='linear',
+                    tick0=yearly_counts['Year'].min(),
+                    dtick=1
+                )
+            )
+            
+            return jsonify({
+                'data': json.loads(fig.to_json())['data'],
+                'layout': json.loads(fig.to_json())['layout'],
+                'statistics': statistics
+            })
+            
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -177,38 +340,6 @@ def get_attack_types():
             title='不同攻擊類型佔比分析',
             height=500,
             font=dict(family="Microsoft JhengHei, Arial", size=12)
-        )
-        
-        return jsonify(json.loads(fig.to_json()))
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/api/time_series')
-def get_time_series():
-    """折線圖：年度攻擊趨勢"""
-    try:
-        df = df_global.copy()
-        yearly_counts = df.groupby('Year').size().reset_index(name='Count')
-        
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=yearly_counts['Year'],
-            y=yearly_counts['Count'],
-            mode='lines+markers',
-            name='攻擊事件數',
-            line=dict(color='#FF6B6B', width=3),
-            marker=dict(size=8),
-            fill='tozeroy',
-            fillcolor='rgba(255, 107, 107, 0.2)'
-        ))
-        
-        fig.update_layout(
-            title='2015-2024 年度網路攻擊趨勢變化',
-            xaxis_title='年份',
-            yaxis_title='攻擊事件數量',
-            height=400,
-            font=dict(family="Microsoft JhengHei, Arial", size=12),
-            hovermode='x unified'
         )
         
         return jsonify(json.loads(fig.to_json()))
