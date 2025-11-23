@@ -201,7 +201,7 @@ def get_top_ips():
 
 @app.route('/api/time_series')
 def get_time_series():
-    """折線圖：年度攻擊趨勢（支援單一國家或多國比較）"""
+    """折線圖：年度攻擊趨勢（支援單一國家或多國比較，包含財務損失）"""
     try:
         df = df_global.copy()
         
@@ -217,7 +217,7 @@ def get_time_series():
             
             colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8']
             
-            for idx, country_name in enumerate(countries[:5]):  # 最多5個國家
+            for idx, country_name in enumerate(countries[:5]):
                 country_df = df[df['Country'] == country_name]
                 if not country_df.empty:
                     yearly_counts = country_df.groupby('Year').size().reset_index(name='Count')
@@ -248,62 +248,107 @@ def get_time_series():
             return jsonify(json.loads(fig.to_json()))
             
         else:
-            # 單一國家或全球模式
+            # 單一國家或全球模式（加上財務損失）
             if country != 'all':
                 df = df[df['Country'] == country]
             
             if df.empty:
                 return jsonify({'data': [], 'layout': {}, 'statistics': {}})
             
-            yearly_counts = df.groupby('Year').size().reset_index(name='Count')
+            # 計算每年的攻擊次數和財務損失
+            yearly_stats = df.groupby('Year').agg({
+                'Country': 'count',  # 攻擊次數
+                'Financial Loss (in Million $)': 'sum'  # 財務損失總和
+            }).reset_index()
+            yearly_stats.columns = ['Year', 'Count', 'Loss']
             
             # 計算統計數據
-            total = yearly_counts['Count'].sum()
-            average = yearly_counts['Count'].mean()
+            total = yearly_stats['Count'].sum()
+            average = yearly_stats['Count'].mean()
+            total_loss = yearly_stats['Loss'].sum()
+            avg_loss = yearly_stats['Loss'].mean()
             
             # 計算趨勢（首尾年份增長率）
-            if len(yearly_counts) >= 2:
-                first_year_count = yearly_counts.iloc[0]['Count']
-                last_year_count = yearly_counts.iloc[-1]['Count']
+            if len(yearly_stats) >= 2:
+                first_year_count = yearly_stats.iloc[0]['Count']
+                last_year_count = yearly_stats.iloc[-1]['Count']
                 if first_year_count > 0:
                     trend = ((last_year_count - first_year_count) / first_year_count) * 100
                 else:
                     trend = 0
+                
+                # 財務損失趨勢
+                first_year_loss = yearly_stats.iloc[0]['Loss']
+                last_year_loss = yearly_stats.iloc[-1]['Loss']
+                if first_year_loss > 0:
+                    loss_trend = ((last_year_loss - first_year_loss) / first_year_loss) * 100
+                else:
+                    loss_trend = 0
             else:
                 trend = 0
+                loss_trend = 0
             
             statistics = {
                 'total': int(total),
                 'average': float(average),
-                'trend': float(trend)
+                'trend': float(trend),
+                'total_loss': float(total_loss),
+                'avg_loss': float(avg_loss),
+                'loss_trend': float(loss_trend)
             }
             
+            # 添加攻擊次數折線（左 Y 軸）
             fig.add_trace(go.Scatter(
-                x=yearly_counts['Year'],
-                y=yearly_counts['Count'],
+                x=yearly_stats['Year'],
+                y=yearly_stats['Count'],
                 mode='lines+markers',
                 name='攻擊事件數',
                 line=dict(color='#FF6B6B', width=4),
                 marker=dict(size=10),
                 fill='tozeroy',
                 fillcolor='rgba(255, 107, 107, 0.2)',
-                hovertemplate='<b>%{x}年</b><br>攻擊次數: %{y:,.0f}<extra></extra>'
+                hovertemplate='<b>%{x}年</b><br>攻擊次數: %{y:,.0f}<extra></extra>',
+                yaxis='y'
             ))
             
-            title = '2015-2024 年度網路攻擊趨勢變化'
+            # 添加財務損失折線（右 Y 軸）
+            fig.add_trace(go.Scatter(
+                x=yearly_stats['Year'],
+                y=yearly_stats['Loss'],
+                mode='lines+markers',
+                name='財務損失 (百萬美元)',
+                line=dict(color='#4ECDC4', width=4, dash='dash'),
+                marker=dict(size=10, symbol='diamond'),
+                hovertemplate='<b>%{x}年</b><br>財務損失: $%{y:,.2f}M<extra></extra>',
+                yaxis='y2'
+            ))
+            
+            title = '2015-2024 年度網路攻擊趨勢與財務損失'
             if country != 'all':
                 title = f'{country} - {title}'
             
             fig.update_layout(
                 title=title,
                 xaxis_title='年份',
-                yaxis_title='攻擊事件數量',
+                yaxis=dict(
+                    title='攻擊事件數量',
+                    titlefont=dict(color='#FF6B6B'),
+                    tickfont=dict(color='#FF6B6B')
+                ),
+                yaxis2=dict(
+                    title='財務損失（百萬美元）',
+                    titlefont=dict(color='#4ECDC4'),
+                    tickfont=dict(color='#4ECDC4'),
+                    overlaying='y',
+                    side='right'
+                ),
                 height=500,
                 font=dict(family="Microsoft JhengHei, Arial", size=12),
                 hovermode='x unified',
+                legend=dict(x=0.01, y=0.99, bgcolor='rgba(255,255,255,0.8)'),
                 xaxis=dict(
                     tickmode='linear',
-                    tick0=yearly_counts['Year'].min(),
+                    tick0=yearly_stats['Year'].min(),
                     dtick=1
                 )
             )
