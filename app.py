@@ -558,8 +558,6 @@ def get_statistics():
         stats = {
             'total_attacks':
             int(df.shape[0]),
-            'unique_source_ips':
-            int(df['Country'].nunique()),
             'unique_countries':
             int(df['Country'].nunique()),
             'attack_types':

@@ -8,7 +8,7 @@
 
     <!-- Statistics Cards -->
     <div class="row" id="stats-container">
-      <div class="col-lg-3 col-md-6 mb-4">
+      <div class="col-lg-4 col-md-12 mb-4">
         <div
           class="stat-card"
           style="background: linear-gradient(135deg, #667eea, #764ba2)"
@@ -18,17 +18,7 @@
           <p>總攻擊次數</p>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6 mb-4">
-        <div
-          class="stat-card"
-          style="background: linear-gradient(135deg, #f093fb, #f5576c)"
-        >
-          <i class="fas fa-network-wired"></i>
-          <h3 id="unique-ips">-</h3>
-          <p>不重複來源 IP</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 mb-4">
+      <div class="col-lg-4 col-md-12 mb-4">
         <div
           class="stat-card"
           style="background: linear-gradient(135deg, #4facfe, #00f2fe)"
@@ -38,7 +28,7 @@
           <p>涉及國家數量</p>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6 mb-4">
+      <div class="col-lg-4 col-md-12 mb-4">
         <div
           class="stat-card"
           style="background: linear-gradient(135deg, #43e97b, #38f9d7)"
@@ -564,8 +554,6 @@
 
       document.getElementById("total-attacks").textContent =
         data.total_attacks.toLocaleString();
-      document.getElementById("unique-ips").textContent =
-        data.unique_source_ips.toLocaleString();
       document.getElementById("unique-countries").textContent =
         data.unique_countries;
       document.getElementById("attack-types").textContent = data.attack_types;
