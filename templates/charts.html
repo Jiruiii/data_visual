@@ -8,28 +8,53 @@
             <p>使用長條圖、圓餅圖、折線圖深入分析攻擊資料</p>
         </div>
 
-        <!-- Bar Chart: Top 10 IPs -->
+        <!-- Bar Chart: Industry Analysis -->
         <div class="chart-container">
             <h3 class="chart-title">
-                <i class="fas fa-chart-bar"></i> TOP 10 受影響使用者最多的事件
+                <i class="fas fa-chart-bar"></i> 產業類型攻擊分析
             </h3>
             <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> 
-                <strong>圖表說明：</strong>橫向長條圖顯示受影響使用者數量最多的 10 個網路攻擊事件，
-                條形長度代表受影響使用者數量，顏色深淺反映影響規模。
+                <i class="fas fa-info-circle"></i>
+                <strong>圖表說明：</strong>橫向長條圖顯示各產業類型的網路攻擊情況，
+                可切換檢視攻擊次數或財務損失，幫助分析不同產業面臨的威脅程度。
             </div>
-            <div id="top-ips-chart" class="loading">
+
+            <!-- Toggle buttons -->
+            <div class="mb-3 text-center">
+                <div class="btn-group" role="group" aria-label="Chart type toggle">
+                    <button type="button" class="btn btn-primary active" id="attack-count-btn"
+                        onclick="switchIndustryChart('count')">
+                        <i class="fas fa-hashtag"></i> 攻擊次數
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" id="financial-loss-btn"
+                        onclick="switchIndustryChart('loss')">
+                        <i class="fas fa-dollar-sign"></i> 財務損失
+                    </button>
+                </div>
+            </div>
+
+            <div id="industry-chart" class="loading">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
+
             <div class="mt-3">
                 <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
-                <ul>
-                    <li><strong>集中度分析：</strong>如果攻擊高度集中在少數 IP，可能存在專業攻擊組織或殭屍網路</li>
-                    <li><strong>IP 類型：</strong>可進一步分析這些 IP 是否來自特定 ISP 或雲端服務供應商</li>
-                    <li><strong>防禦策略：</strong>針對高頻攻擊 IP 可建立黑名單，實施即時封鎖</li>
-                </ul>
+                <div id="industry-insights">
+                    <ul id="count-insights">
+                        <li><strong>高風險產業：</strong>金融、IT部門通常是攻擊者的主要目標</li>
+                        <li><strong>攻擊分散度：</strong>分析攻擊是否集中在特定產業或均勻分布</li>
+                        <li><strong>防禦優先級：</strong>攻擊次數高的產業應優先加強網路安全防護</li>
+                        <li><strong>產業特性：</strong>不同產業面臨的攻擊類型和頻率可能存在差異</li>
+                    </ul>
+                    <ul id="loss-insights" style="display: none;">
+                        <li><strong>經濟衝擊：</strong>財務損失反映攻擊對產業的實際經濟影響</li>
+                        <li><strong>損失集中度：</strong>少數高價值目標可能造成巨大財務損失</li>
+                        <li><strong>風險評估：</strong>結合攻擊頻率與財務損失評估產業風險</li>
+                        <li><strong>資源配置：</strong>高財損產業需投入更多資源進行防護</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -39,7 +64,7 @@
                 <i class="fas fa-chart-pie"></i> 不同攻擊類型佔比分析
             </h3>
             <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i>
                 <strong>圖表說明：</strong>圓餅圖展示各種攻擊類型（DDoS、Port Scan、SQL Injection 等）的相對比例，
                 幫助理解當前網路威脅的主要形式。
             </div>
@@ -66,7 +91,7 @@
                 <i class="fas fa-chart-line"></i> 2015-2024 年度攻擊趨勢變化
             </h3>
             <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i>
                 <strong>圖表說明：</strong>折線圖呈現 2015 到 2024 年間每年的攻擊次數變化，
                 可觀察長期趨勢和年度波動。
             </div>
@@ -78,10 +103,10 @@
             <div class="mt-3">
                 <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
                 <ul>
-                    <li><strong>尖峰時段：</strong>攻擊次數的高峰期可能與攻擊者活躍時段或目標系統使用高峰有關</li>
-                    <li><strong>離峰時段：</strong>凌晨時段若攻擊減少，可能是人為操作的攻擊；若持平則可能是自動化攻擊</li>
-                    <li><strong>週期性：</strong>規律的波動顯示攻擊活動具有時間模式，可用於預測和防範</li>
-                    <li><strong>異常偵測：</strong>突然的尖峰可能代表大規模攻擊事件或特定目標遭受集中攻擊</li>
+                    <li><strong>年度趨勢：</strong>觀察攻擊次數的長期增減趨勢</li>
+                    <li><strong>波動分析：</strong>識別特定年份的攻擊高峰或低谷</li>
+                    <li><strong>成長率：</strong>分析攻擊活動的年度成長情況</li>
+                    <li><strong>預測基礎：</strong>歷史趨勢有助於預測未來威脅發展</li>
                 </ul>
             </div>
         </div>
@@ -103,19 +128,19 @@
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td>金融業是攻擊的主要目標</td>
+                                    <td><span class="badge bg-success">✓ 符合</span></td>
+                                    <td>金融業擁有高價值數據和資產，是攻擊者的首選目標</td>
+                                </tr>
+                                <tr>
                                     <td>DDoS 是最常見的攻擊類型</td>
                                     <td><span class="badge bg-success">✓ 符合</span></td>
                                     <td>DDoS 攻擊工具易取得，攻擊成本低，效果顯著</td>
                                 </tr>
                                 <tr>
-                                    <td>攻擊在凌晨時段較少</td>
+                                    <td>攻擊次數逐年增加</td>
                                     <td><span class="badge bg-warning">部分符合</span></td>
-                                    <td>自動化攻擊全天候進行，但人為操作的攻擊確實有時段性</td>
-                                </tr>
-                                <tr>
-                                    <td>少數 IP 負責大量攻擊</td>
-                                    <td><span class="badge bg-success">✓ 符合</span></td>
-                                    <td>可能存在殭屍網路或專業攻擊組織使用固定基礎設施</td>
+                                    <td>整體呈上升趨勢，但某些年份會有波動</td>
                                 </tr>
                                 <tr>
                                     <td>攻擊類型呈現多樣化</td>
@@ -135,13 +160,13 @@
                 <div class="card h-100 border-0 shadow">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i> 
+                            <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
                             長條圖的優勢
                         </h5>
                         <ul class="small">
                             <li>直接比較數值大小</li>
                             <li>快速識別排名順序</li>
-                            <li>適合呈現 TOP N 資料</li>
+                            <li>適合呈現分類資料</li>
                             <li>易於理解和解讀</li>
                         </ul>
                     </div>
@@ -151,7 +176,7 @@
                 <div class="card h-100 border-0 shadow">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="fas fa-chart-pie" style="color: var(--success-color);"></i> 
+                            <i class="fas fa-chart-pie" style="color: var(--success-color);"></i>
                             圓餅圖的優勢
                         </h5>
                         <ul class="small">
@@ -167,7 +192,7 @@
                 <div class="card h-100 border-0 shadow">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="fas fa-chart-line" style="color: var(--danger-color);"></i> 
+                            <i class="fas fa-chart-line" style="color: var(--danger-color);"></i>
                             折線圖的優勢
                         </h5>
                         <ul class="small">
@@ -186,15 +211,38 @@
 
 {% block extra_js %}
 <script>
-    // Load Top 10 IPs chart using Plotly.js
-    async function loadTopIPs() {
-        const chartDiv = document.getElementById('top-ips-chart');
+    let currentIndustryChart = 'count';
+
+    // Switch between industry chart types
+    function switchIndustryChart(type) {
+        currentIndustryChart = type;
+
+        // Update button states
+        document.getElementById('attack-count-btn').className =
+            type === 'count' ? 'btn btn-primary active' : 'btn btn-outline-primary';
+        document.getElementById('financial-loss-btn').className =
+            type === 'loss' ? 'btn btn-primary active' : 'btn btn-outline-primary';
+
+        // Update insights
+        document.getElementById('count-insights').style.display = type === 'count' ? 'block' : 'none';
+        document.getElementById('loss-insights').style.display = type === 'loss' ? 'block' : 'none';
+
+        // Reload chart
+        loadIndustryChart();
+    }
+
+    // Load Industry Analysis chart using Plotly.js
+    async function loadIndustryChart() {
+        const chartDiv = document.getElementById('industry-chart');
         try {
-            const response = await fetch('/api/top_ips');
+            chartDiv.classList.add('loading');
+            chartDiv.innerHTML = '<div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>';
+
+            const response = await fetch(`/api/industry_analysis?type=${currentIndustryChart}`);
             const data = await response.json();
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
-            
+
             // Create horizontal bar chart
             const trace = {
                 type: 'bar',
@@ -202,42 +250,74 @@
                 y: data.labels,
                 orientation: 'h',
                 marker: {
-                    color: data.values,
-                    colorscale: 'Viridis',
+                    color: data.values,  // 根據數值大小變色
+                    colorscale: currentIndustryChart === 'count' ?
+                        [
+                            [0, '#E3F2FD'],      // 淺藍
+                            [0.5, '#2196F3'],    // 中藍
+                            [1, '#0D47A1']       // 深藍
+                        ] :
+                        [
+                            [0, '#FFEBEE'],      // 淺紅
+                            [0.5, '#F44336'],    // 中紅
+                            [1, '#B71C1C']       // 深紅
+                        ],
                     showscale: true,
                     colorbar: {
-                        title: '影響人數'
+                        title: currentIndustryChart === 'count' ? '攻擊次數' : '財務損失 (百萬美元)',
+                        titlefont: { family: 'Microsoft JhengHei, Arial' }
                     }
                 },
-                text: data.values.map(v => v.toLocaleString()),
+                text: data.values.map(v => currentIndustryChart === 'count' ?
+                    v.toLocaleString() : `$${v.toFixed(1)}M`),
                 textposition: 'auto',
-                hovertemplate: '<b>%{y}</b><br>受影響使用者: %{x:,}<extra></extra>'
+                hovertemplate: `<b>%{y}</b><br>${currentIndustryChart === 'count' ? '攻擊次數' : '財務損失'}: %{x${currentIndustryChart === 'count' ? ':,' : ':.1f'}}<extra></extra>`
             };
-            
+
             const layout = {
                 title: {
-                    text: `TOP ${data.top_n} 受影響使用者最多的網路攻擊事件`,
-                    font: { family: 'Microsoft JhengHei, Arial', size: 16 }
+                    text: `產業類型${currentIndustryChart === 'count' ? '攻擊次數' : '財務損失'}分析`,
+                    font: { family: 'Microsoft JhengHei, Arial', size: 16 },
+                    x: 0.5  // 居中標題
                 },
                 xaxis: {
-                    title: '受影響使用者數量',
-                    font: { family: 'Microsoft JhengHei, Arial' }
+                    title: {
+                        text: currentIndustryChart === 'count' ? '攻擊次數' : '財務損失 (百萬美元)',
+                        font: { family: 'Microsoft JhengHei, Arial', size: 14 }
+                    },
+                    tickfont: { size: 12 }
                 },
                 yaxis: {
-                    title: '國家 - 攻擊類型',
+                    title: {
+                        text: '產業類型',
+                        font: { family: 'Microsoft JhengHei, Arial', size: 14 },
+                        standoff: 25  // 增加距離
+                    },
                     font: { family: 'Microsoft JhengHei, Arial' },
-                    categoryorder: 'total ascending'
+                    categoryorder: 'total ascending',
+                    tickfont: {
+                        size: 11,  // 稍微縮小字體
+                        family: 'Microsoft JhengHei, Arial'
+                    },
+                    automargin: true  // 自動調整邊距
                 },
                 height: 500,
                 font: { family: 'Microsoft JhengHei, Arial', size: 12 },
-                hovermode: 'closest'
+                hovermode: 'closest',
+                margin: {
+                    l: 200,  // 進一步增加左邊距
+                    r: 80,
+                    t: 100,
+                    b: 60
+                },
+                showlegend: false
             };
-            
-            Plotly.newPlot('top-ips-chart', [trace], layout, {responsive: true, displayModeBar: true});
+
+            Plotly.newPlot('industry-chart', [trace], layout, { responsive: true, displayModeBar: true });
         } catch (error) {
-            console.error('Error loading top IPs:', error);
+            console.error('Error loading industry chart:', error);
             chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = 
+            chartDiv.innerHTML =
                 '<div class="alert alert-danger">載入圖表失敗</div>';
         }
     }
@@ -250,7 +330,7 @@
             const data = await response.json();
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
-            
+
             // Create pie chart
             const trace = {
                 type: 'pie',
@@ -267,7 +347,7 @@
                 textposition: 'auto',
                 hovertemplate: '<b>%{label}</b><br>數量: %{value}<br>佔比: %{percent}<extra></extra>'
             };
-            
+
             const layout = {
                 title: {
                     text: '不同攻擊類型佔比分析',
@@ -276,12 +356,12 @@
                 height: 500,
                 font: { family: 'Microsoft JhengHei, Arial', size: 12 }
             };
-            
-            Plotly.newPlot('attack-types-chart', [trace], layout, {responsive: true, displayModeBar: true});
+
+            Plotly.newPlot('attack-types-chart', [trace], layout, { responsive: true, displayModeBar: true });
         } catch (error) {
             console.error('Error loading attack types:', error);
             chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = 
+            chartDiv.innerHTML =
                 '<div class="alert alert-danger">載入圖表失敗</div>';
         }
     }
@@ -294,7 +374,7 @@
             const data = await response.json();
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
-            
+
             // Create line chart
             const trace = {
                 type: 'scatter',
@@ -313,7 +393,7 @@
                 fillcolor: 'rgba(255, 107, 107, 0.2)',
                 hovertemplate: '<b>%{x}年</b><br>攻擊次數: %{y:,}<extra></extra>'
             };
-            
+
             const layout = {
                 title: {
                     text: '2015-2024 年度網路攻擊趨勢變化',
@@ -333,19 +413,19 @@
                 font: { family: 'Microsoft JhengHei, Arial', size: 12 },
                 hovermode: 'x unified'
             };
-            
-            Plotly.newPlot('time-series-chart', [trace], layout, {responsive: true, displayModeBar: true});
+
+            Plotly.newPlot('time-series-chart', [trace], layout, { responsive: true, displayModeBar: true });
         } catch (error) {
             console.error('Error loading time series:', error);
             chartDiv.classList.remove('loading');
-            chartDiv.innerHTML = 
+            chartDiv.innerHTML =
                 '<div class="alert alert-danger">載入圖表失敗</div>';
         }
     }
 
     // Initialize all charts
-    document.addEventListener('DOMContentLoaded', function() {
-        loadTopIPs();
+    document.addEventListener('DOMContentLoaded', function () {
+        loadIndustryChart();
         loadAttackTypes();
         loadTimeSeries();
     });

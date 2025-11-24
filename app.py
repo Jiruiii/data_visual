@@ -107,6 +107,37 @@ def get_map_data():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/api/industry_analysis')
+def get_industry_analysis():
+    """長條圖：產業類型分析（攻擊次數或財務損失）"""
+    try:
+        df = df_global.copy()
+        chart_type = request.args.get('type', 'count')
+        
+        if chart_type == 'count':
+            # 按產業統計攻擊次數
+            industry_counts = df['Target Industry'].value_counts().reset_index()
+            industry_counts.columns = ['Industry', 'Count']
+            
+            return jsonify({
+                'labels': industry_counts['Industry'].tolist(),
+                'values': industry_counts['Count'].tolist(),
+                'type': 'count'
+            })
+        else:  # loss
+            # 按產業統計財務損失
+            industry_loss = df.groupby('Target Industry')['Financial Loss (in Million $)'].sum().reset_index()
+            industry_loss = industry_loss.sort_values('Financial Loss (in Million $)', ascending=True)
+            
+            return jsonify({
+                'labels': industry_loss['Target Industry'].tolist(),
+                'values': industry_loss['Financial Loss (in Million $)'].tolist(),
+                'type': 'loss'
+            })
+            
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/api/countries')
