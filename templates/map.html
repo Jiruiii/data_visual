@@ -83,21 +83,63 @@
 
 {% block extra_js %}
 <script>
-    // Load map data
+    // Load map data and render with Plotly.js
     async function loadMapData() {
         const chartDiv = document.getElementById('map-chart');
         try {
             const response = await fetch('/api/map_data');
             const data = await response.json();
             
-            // Remove loading state and spinner
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
             
-            const layout = data.layout || {};
-            layout.autosize = true;
+            // Create choropleth map using Plotly.js
+            const trace = {
+                type: 'choropleth',
+                locations: data.countries,
+                locationmode: 'country names',
+                z: data.counts,
+                text: data.countries,
+                colorscale: 'Reds',
+                autocolorscale: false,
+                reversescale: false,
+                marker: {
+                    line: {
+                        color: 'rgb(180,180,180)',
+                        width: 0.5
+                    }
+                },
+                colorbar: {
+                    title: '攻擊次數',
+                    thickness: 15,
+                    len: 0.7
+                },
+                hovertemplate: '<b>%{text}</b><br>攻擊次數: %{z:,}<extra></extra>'
+            };
             
-            Plotly.newPlot('map-chart', data.data, layout, {
+            const layout = {
+                title: {
+                    text: '全球網路安全事件分布圖 (2015-2024)',
+                    font: {
+                        family: 'Microsoft JhengHei, Arial',
+                        size: 18
+                    }
+                },
+                geo: {
+                    showframe: false,
+                    showcoastlines: true,
+                    projection: {
+                        type: 'natural earth'
+                    }
+                },
+                height: 600,
+                font: {
+                    family: 'Microsoft JhengHei, Arial',
+                    size: 14
+                }
+            };
+            
+            Plotly.newPlot('map-chart', [trace], layout, {
                 responsive: true,
                 displayModeBar: true,
                 modeBarButtonsToRemove: ['lasso2d', 'select2d'],
