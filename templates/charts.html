@@ -186,7 +186,7 @@
 
 {% block extra_js %}
 <script>
-    // Load Top 10 IPs chart
+    // Load Top 10 IPs chart using Plotly.js
     async function loadTopIPs() {
         const chartDiv = document.getElementById('top-ips-chart');
         try {
@@ -194,7 +194,46 @@
             const data = await response.json();
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
-            Plotly.newPlot('top-ips-chart', data.data, data.layout, {responsive: true});
+            
+            // Create horizontal bar chart
+            const trace = {
+                type: 'bar',
+                x: data.values,
+                y: data.labels,
+                orientation: 'h',
+                marker: {
+                    color: data.values,
+                    colorscale: 'Viridis',
+                    showscale: true,
+                    colorbar: {
+                        title: '影響人數'
+                    }
+                },
+                text: data.values.map(v => v.toLocaleString()),
+                textposition: 'auto',
+                hovertemplate: '<b>%{y}</b><br>受影響使用者: %{x:,}<extra></extra>'
+            };
+            
+            const layout = {
+                title: {
+                    text: `TOP ${data.top_n} 受影響使用者最多的網路攻擊事件`,
+                    font: { family: 'Microsoft JhengHei, Arial', size: 16 }
+                },
+                xaxis: {
+                    title: '受影響使用者數量',
+                    font: { family: 'Microsoft JhengHei, Arial' }
+                },
+                yaxis: {
+                    title: '國家 - 攻擊類型',
+                    font: { family: 'Microsoft JhengHei, Arial' },
+                    categoryorder: 'total ascending'
+                },
+                height: 500,
+                font: { family: 'Microsoft JhengHei, Arial', size: 12 },
+                hovermode: 'closest'
+            };
+            
+            Plotly.newPlot('top-ips-chart', [trace], layout, {responsive: true, displayModeBar: true});
         } catch (error) {
             console.error('Error loading top IPs:', error);
             chartDiv.classList.remove('loading');
@@ -203,7 +242,7 @@
         }
     }
 
-    // Load Attack Types chart
+    // Load Attack Types chart using Plotly.js
     async function loadAttackTypes() {
         const chartDiv = document.getElementById('attack-types-chart');
         try {
@@ -211,7 +250,34 @@
             const data = await response.json();
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
-            Plotly.newPlot('attack-types-chart', data.data, data.layout, {responsive: true});
+            
+            // Create pie chart
+            const trace = {
+                type: 'pie',
+                labels: data.labels,
+                values: data.values,
+                hole: 0.3,
+                marker: {
+                    colors: [
+                        '#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#80b1d3',
+                        '#fdb462', '#b3de69', '#fccde5', '#d9d9d9', '#bc80bd'
+                    ]
+                },
+                textinfo: 'label+percent',
+                textposition: 'auto',
+                hovertemplate: '<b>%{label}</b><br>數量: %{value}<br>佔比: %{percent}<extra></extra>'
+            };
+            
+            const layout = {
+                title: {
+                    text: '不同攻擊類型佔比分析',
+                    font: { family: 'Microsoft JhengHei, Arial', size: 16 }
+                },
+                height: 500,
+                font: { family: 'Microsoft JhengHei, Arial', size: 12 }
+            };
+            
+            Plotly.newPlot('attack-types-chart', [trace], layout, {responsive: true, displayModeBar: true});
         } catch (error) {
             console.error('Error loading attack types:', error);
             chartDiv.classList.remove('loading');
@@ -220,7 +286,7 @@
         }
     }
 
-    // Load Time Series chart
+    // Load Time Series chart using Plotly.js
     async function loadTimeSeries() {
         const chartDiv = document.getElementById('time-series-chart');
         try {
@@ -228,7 +294,47 @@
             const data = await response.json();
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
-            Plotly.newPlot('time-series-chart', data.data, data.layout, {responsive: true});
+            
+            // Create line chart
+            const trace = {
+                type: 'scatter',
+                mode: 'lines+markers',
+                x: data.years,
+                y: data.counts,
+                name: '攻擊事件數',
+                line: {
+                    color: '#FF6B6B',
+                    width: 3
+                },
+                marker: {
+                    size: 8
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(255, 107, 107, 0.2)',
+                hovertemplate: '<b>%{x}年</b><br>攻擊次數: %{y:,}<extra></extra>'
+            };
+            
+            const layout = {
+                title: {
+                    text: '2015-2024 年度網路攻擊趨勢變化',
+                    font: { family: 'Microsoft JhengHei, Arial', size: 16 }
+                },
+                xaxis: {
+                    title: '年份',
+                    font: { family: 'Microsoft JhengHei, Arial' },
+                    tickmode: 'linear',
+                    dtick: 1
+                },
+                yaxis: {
+                    title: '攻擊事件數量',
+                    font: { family: 'Microsoft JhengHei, Arial' }
+                },
+                height: 400,
+                font: { family: 'Microsoft JhengHei, Arial', size: 12 },
+                hovermode: 'x unified'
+            };
+            
+            Plotly.newPlot('time-series-chart', [trace], layout, {responsive: true, displayModeBar: true});
         } catch (error) {
             console.error('Error loading time series:', error);
             chartDiv.classList.remove('loading');
