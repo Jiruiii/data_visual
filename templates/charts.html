@@ -85,121 +85,70 @@
             </div>
         </div>
 
-        <!-- Line Chart: Time Series -->
+        <!-- Box Plot: Defense Method vs Resolution Time (替換原本的折線圖位置) -->
         <div class="chart-container">
             <h3 class="chart-title">
-                <i class="fas fa-chart-line"></i> 2015-2024 年度攻擊趨勢變化
+                <i class="fas fa-box-open"></i> 防禦方法與事件解決時間比較
             </h3>
             <div class="alert alert-info">
                 <i class="fas fa-info-circle"></i>
-                <strong>圖表說明：</strong>折線圖呈現 2015 到 2024 年間每年的攻擊次數變化，
-                可觀察長期趨勢和年度波動。
+                <strong>圖表說明：</strong>盒鬚圖展示不同防禦方法對應的事件解決時間分布，
+                幫助評估各種防禦策略的效率和一致性。
             </div>
-            <div id="time-series-chart" class="loading">
+            <div id="defense-resolution-chart" class="loading">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
                 </div>
             </div>
+
+            <!-- Statistics Table -->
+            <div class="mt-3">
+                <h6><i class="fas fa-table"></i> 統計摘要：</h6>
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped" id="defense-stats-table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>防禦方法</th>
+                                <th>事件數</th>
+                                <th>平均時間</th>
+                                <th>中位數</th>
+                                <th>標準差</th>
+                                <th>最短時間</th>
+                                <th>最長時間</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div class="mt-3">
                 <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
                 <ul>
-                    <li><strong>年度趨勢：</strong>觀察攻擊次數的長期增減趨勢</li>
-                    <li><strong>波動分析：</strong>識別特定年份的攻擊高峰或低谷</li>
-                    <li><strong>成長率：</strong>分析攻擊活動的年度成長情況</li>
-                    <li><strong>預測基礎：</strong>歷史趨勢有助於預測未來威脅發展</li>
+                    <li><strong>效率比較：</strong>中位數較低的防禦方法通常更有效率</li>
+                    <li><strong>一致性分析：</strong>盒子較小的防禦方法表示解決時間較穩定</li>
+                    <li><strong>異常值識別：</strong>圖中的點顯示異常長或短的解決時間</li>
+                    <li><strong>方法選擇：</strong>綜合考慮平均時間和變異程度選擇最佳防禦策略</li>
+                    <li><strong>資源配置：</strong>高變異的方法可能需要更多資源投入</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Overall Analysis -->
-        <div class="mt-4">
-            <h3><i class="fas fa-clipboard-check"></i> 綜合分析與假設驗證</h3>
-            <div class="card border-0 shadow">
-                <div class="card-body">
-                    <h5 class="card-title">原始假設 vs 實際觀察</h5>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>假設</th>
-                                    <th>驗證結果</th>
-                                    <th>可能原因</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>金融業是攻擊的主要目標</td>
-                                    <td><span class="badge bg-success">✓ 符合</span></td>
-                                    <td>金融業擁有高價值數據和資產，是攻擊者的首選目標</td>
-                                </tr>
-                                <tr>
-                                    <td>DDoS 是最常見的攻擊類型</td>
-                                    <td><span class="badge bg-success">✓ 符合</span></td>
-                                    <td>DDoS 攻擊工具易取得，攻擊成本低，效果顯著</td>
-                                </tr>
-                                <tr>
-                                    <td>攻擊次數逐年增加</td>
-                                    <td><span class="badge bg-warning">部分符合</span></td>
-                                    <td>整體呈上升趨勢，但某些年份會有波動</td>
-                                </tr>
-                                <tr>
-                                    <td>攻擊類型呈現多樣化</td>
-                                    <td><span class="badge bg-success">✓ 符合</span></td>
-                                    <td>攻擊者採用多種手法以提高成功率，繞過單一防禦機制</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Chart Benefits -->
-        <div class="row mt-4">
+        <!-- 新增盒鬚圖的優勢說明卡片 -->
+        <div class="row">
             <div class="col-md-4 mb-3">
                 <div class="card h-100 border-0 shadow">
                     <div class="card-body">
                         <h5 class="card-title">
-                            <i class="fas fa-chart-bar" style="color: var(--primary-color);"></i>
-                            長條圖的優勢
+                            <i class="fas fa-box-open" style="color: var(--danger-color);"></i>
+                            盒鬚圖的優勢
                         </h5>
                         <ul class="small">
-                            <li>直接比較數值大小</li>
-                            <li>快速識別排名順序</li>
-                            <li>適合呈現分類資料</li>
-                            <li>易於理解和解讀</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100 border-0 shadow">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-pie" style="color: var(--success-color);"></i>
-                            圓餅圖的優勢
-                        </h5>
-                        <ul class="small">
-                            <li>展現整體與部分關係</li>
-                            <li>一眼看出比例分配</li>
-                            <li>適合呈現組成結構</li>
-                            <li>視覺效果直觀</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card h-100 border-0 shadow">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <i class="fas fa-chart-line" style="color: var(--danger-color);"></i>
-                            折線圖的優勢
-                        </h5>
-                        <ul class="small">
-                            <li>呈現時間序列趨勢</li>
-                            <li>觀察變化模式</li>
-                            <li>發現週期性規律</li>
-                            <li>預測未來趨勢</li>
+                            <li>顯示數據分布情況</li>
+                            <li>識別異常值和離群點</li>
+                            <li>比較不同組別的差異</li>
+                            <li>評估數據變異程度</li>
                         </ul>
                     </div>
                 </div>
@@ -366,68 +315,118 @@
         }
     }
 
-    // Load Time Series chart using Plotly.js
-    async function loadTimeSeries() {
-        const chartDiv = document.getElementById('time-series-chart');
+    // Load Defense Resolution Box Plot using Plotly.js
+    async function loadDefenseResolution() {
+        const chartDiv = document.getElementById('defense-resolution-chart');
         try {
-            const response = await fetch('/api/time_series');
+            const response = await fetch('/api/defense_resolution');
             const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
 
-            // Create line chart
-            const trace = {
-                type: 'scatter',
-                mode: 'lines+markers',
-                x: data.years,
-                y: data.counts,
-                name: '攻擊事件數',
-                line: {
-                    color: '#FF6B6B',
-                    width: 3
-                },
-                marker: {
-                    size: 8
-                },
-                fill: 'tozeroy',
-                fillcolor: 'rgba(255, 107, 107, 0.2)',
-                hovertemplate: '<b>%{x}年</b><br>攻擊次數: %{y:,}<extra></extra>'
-            };
+            // 準備盒鬚圖數據
+            const traces = [];
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
+
+            data.defense_methods.forEach((method, index) => {
+                if (data.resolution_data[method] && data.resolution_data[method].length > 0) {
+                    traces.push({
+                        type: 'box',
+                        y: data.resolution_data[method],
+                        name: method,
+                        boxpoints: 'outliers',
+                        marker: {
+                            color: colors[index % colors.length],
+                            outliercolor: 'rgba(219, 64, 82, 0.6)',
+                            line: {
+                                outliercolor: 'rgba(219, 64, 82, 0.6)',
+                                outlierwidth: 2
+                            }
+                        },
+                        line: {
+                            color: colors[index % colors.length]
+                        }
+                    });
+                }
+            });
 
             const layout = {
                 title: {
-                    text: '2015-2024 年度網路攻擊趨勢變化',
+                    text: '防禦方法與事件解決時間比較',
                     font: { family: 'Microsoft JhengHei, Arial', size: 16 }
                 },
                 xaxis: {
-                    title: '年份',
-                    font: { family: 'Microsoft JhengHei, Arial' },
-                    tickmode: 'linear',
-                    dtick: 1
+                    title: {
+                        text: '防禦方法',
+                        font: { family: 'Microsoft JhengHei, Arial', size: 14 }
+                    },
+                    tickangle: -45,
+                    automargin: true
                 },
                 yaxis: {
-                    title: '攻擊事件數量',
-                    font: { family: 'Microsoft JhengHei, Arial' }
+                    title: {
+                        text: '事件解決時間 (小時)',
+                        font: { family: 'Microsoft JhengHei, Arial', size: 14 }
+                    }
                 },
-                height: 400,
+                height: 500,
                 font: { family: 'Microsoft JhengHei, Arial', size: 12 },
-                hovermode: 'x unified'
+                hovermode: 'closest',
+                margin: {
+                    l: 80,
+                    r: 50,
+                    t: 100,
+                    b: 120
+                }
             };
 
-            Plotly.newPlot('time-series-chart', [trace], layout, { responsive: true, displayModeBar: true });
+            Plotly.newPlot('defense-resolution-chart', traces, layout, {
+                responsive: true,
+                displayModeBar: true
+            });
+
+            // 更新統計表格
+            updateDefenseStatsTable(data.statistics);
+
         } catch (error) {
-            console.error('Error loading time series:', error);
+            console.error('Error loading defense resolution chart:', error);
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML =
-                '<div class="alert alert-danger">載入圖表失敗</div>';
+                '<div class="alert alert-danger">載入圖表失敗: ' + error.message + '</div>';
         }
+    }
+
+    // 更新統計表格
+    function updateDefenseStatsTable(statistics) {
+        const tbody = document.querySelector('#defense-stats-table tbody');
+        tbody.innerHTML = '';
+
+        Object.keys(statistics).forEach(method => {
+            const stats = statistics[method];
+            const row = tbody.insertRow();
+
+            row.innerHTML = `
+                <td><strong>${method}</strong></td>
+                <td>${stats.count}</td>
+                <td>${stats.mean.toFixed(1)}h</td>
+                <td>${stats.median.toFixed(1)}h</td>
+                <td>${stats.std.toFixed(1)}h</td>
+                <td>${stats.min.toFixed(1)}h</td>
+                <td>${stats.max.toFixed(1)}h</td>
+            `;
+        });
     }
 
     // Initialize all charts
     document.addEventListener('DOMContentLoaded', function () {
         loadIndustryChart();
         loadAttackTypes();
-        loadTimeSeries();
+        loadDefenseResolution(); // 替換原本的 loadTimeSeries()
     });
 </script>
 {% endblock %}
