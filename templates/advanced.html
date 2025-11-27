@@ -108,7 +108,7 @@
           </li>
           <li>
             <strong>視覺對比：</strong>
-            矩形大小的對比非常直觀，一眼就能看出哪些埠號需要重點防護
+            矩形大小的對比非常直觀，一眼就能看出哪些產業需要重點防護
           </li>
         </ul>
 
@@ -116,8 +116,8 @@
           <h6><i class="fas fa-lightbulb"></i> 為什麼選擇 Treemap？</h6>
           <p class="mb-0">
             Treemap 最大的優勢是<strong>一圖多訊</strong>（One view, multiple
-            insights）！ 它同時展示：(1) 哪個埠號被攻擊最多 (2)
-            該埠號遭受哪些類型攻擊 (3) 各攻擊類型的佔比。
+            insights）！ 它同時展示：(1) 哪個產業被攻擊最多 (2)
+            該產業遭受哪些類型攻擊 (3) 各攻擊類型的佔比。
             而且視覺效果超級吸睛，很適合在簡報中使用，讓觀眾快速抓住重點。
           </p>
         </div>
@@ -206,7 +206,7 @@
             <h6>💡 Treemap 揭露</h6>
             <ul>
               <li>防禦資源的優先順序</li>
-              <li>埠號與攻擊類型的相關性</li>
+              <li>產業與攻擊類型的相關性</li>
               <li>整體威脅的結構分布</li>
             </ul>
           </div>
@@ -223,173 +223,9 @@
     </div>
   </div>
 </div>
-{% endblock %} {% block extra_js %}
-<script>
-  // Load Sankey diagram using Plotly.js
-  async function loadSankey() {
-    const chartDiv = document.getElementById("sankey-chart");
-    try {
-      const response = await fetch("/api/sankey");
-      const data = await response.json();
-      chartDiv.classList.remove("loading");
-      chartDiv.innerHTML = "";
+{% endblock %}
 
-      // Create Sankey diagram
-      const trace = {
-        type: "sankey",
-        orientation: "h",
-        node: {
-          pad: 15,
-          thickness: 20,
-          line: {
-            color: "black",
-            width: 0.5,
-          },
-          label: data.nodes,
-          color: data.node_colors,
-          hovertemplate:
-            "<b>%{label}</b><br>總攻擊次數: %{value}<extra></extra>",
-        },
-        link: {
-          source: data.sources,
-          target: data.targets,
-          value: data.values,
-          color: "rgba(0,0,0,0.2)",
-          hovertemplate:
-            "<b>%{source.label} → %{target.label}</b><br>攻擊次數: %{value}<extra></extra>",
-        },
-      };
-
-      const layout = {
-        title: {
-          text: "攻擊流向：國家 → 攻擊類型 → 目標產業",
-          font: { family: "Microsoft JhengHei, Arial", size: 16 },
-        },
-        font: {
-          family: "Microsoft JhengHei, Arial",
-          size: 12,
-        },
-        height: 700,
-      };
-
-      Plotly.newPlot("sankey-chart", [trace], layout, {
-        responsive: true,
-        displayModeBar: true,
-      });
-    } catch (error) {
-      console.error("Error loading Sankey diagram:", error);
-      chartDiv.classList.remove("loading");
-      chartDiv.innerHTML =
-        '<div class="alert alert-danger">載入 Sankey 圖失敗：' +
-        error.message +
-        "</div>";
-    }
-  }
-
-  // Load Treemap using Plotly.js
-  async function loadTreemap() {
-    const chartDiv = document.getElementById("treemap-chart");
-    try {
-      const response = await fetch("/api/treemap");
-      const data = await response.json();
-
-      if (data.error) {
-        throw new Error(data.error);
-      }
-
-      // 驗證資料
-    //   console.log("Treemap data:", {
-    //     labels: data.labels.length,
-    //     parents: data.parents.length,
-    //     values: data.values.length,
-    //     sample: {
-    //       labels: data.labels.slice(0, 5),
-    //       parents: data.parents.slice(0, 5),
-    //       values: data.values.slice(0, 5),
-    //     },
-    //   });
-      console.log(data)
-
-      // 檢查是否有 NaN 值
-      const hasNaN = data.values.some(
-        (v) => v === null || v === undefined || isNaN(v)
-      );
-      if (hasNaN) {
-        throw new Error("資料中包含無效數值");
-      }
-
-      chartDiv.classList.remove("loading");
-      chartDiv.innerHTML = "";
-
-      // Color scale mapping
-      const colorScales = {
-        default: "RdYlGn",
-        viridis: "Viridis",
-        plasma: "Plasma",
-        inferno: "Inferno",
-      };
-
-      // Create Treemap
-      const trace = {
-        type: "treemap",
-        labels: data.labels,
-        parents: data.parents,
-        values: data.values,
-        textposition: "middle center",
-        marker: {
-          colors: data.values,
-          colorscale: colorScales[data.colorscheme],
-          cmid: Math.max(...data.values) / 2,
-          colorbar: {
-            title: "事件數",
-            thickness: 20,
-            len: 0.7,
-          },
-          line: {
-            width: 2,
-            color: "white",
-          },
-        },
-        textinfo: "label+value+percent parent",
-        textfont: {
-          family: "Microsoft JhengHei, Arial",
-          size: 12,
-        },
-        hovertemplate:
-          "<b>%{label}</b><br>事件數: %{value:,.0f}<br>佔比: %{percentParent}<extra></extra>",
-      };
-
-      const layout = {
-        title: {
-          text: "目標產業與攻擊類型分布（樹狀圖）",
-          font: { family: "Microsoft JhengHei, Arial", size: 16 },
-        },
-        font: {
-          family: "Microsoft JhengHei, Arial",
-          size: 11,
-        },
-        height: 600,
-        margin: { t: 50, l: 25, r: 25, b: 25 },
-      };
-
-      Plotly.newPlot("treemap-chart", [trace], layout, {
-        responsive: true,
-        displayModeBar: true,
-      });
-    } catch (error) {
-      console.error("Error loading Treemap:", error);
-      chartDiv.classList.remove("loading");
-      chartDiv.innerHTML =
-        '<div class="alert alert-danger">載入 Treemap 失敗：' +
-        error.message +
-        "</div>";
-    }
-  }
-
-  // Initialize all charts
-  document.addEventListener("DOMContentLoaded", function () {
-    loadSankey();
-    loadTreemap();
-  });
-</script>
+{% block extra_js %}
+<!-- 引用外部 Plotly.js 圖表程式碼 -->
+<script src="{{ url_for('static', filename='js/advanced.js') }}"></script>
 {% endblock %}
