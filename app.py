@@ -101,17 +101,58 @@ def get_map_data():
     """地圖：各國網路攻擊事件數量（返回原始資料）"""
     try:
         df = df_global.copy()
-        country_counts = df["Country"].value_counts().reset_index()
-        country_counts.columns = ["Country", "Count"]
-
-        return jsonify(
-            {
-                "countries": country_counts["Country"].tolist(),
-                "counts": country_counts["Count"].tolist(),
+        
+        required_cols = ['Country', 'Year', 'Financial Loss (in Million $)']
+        for col in required_cols:
+            if col not in df.columns:
+                return jsonify({"error": f"Required column '{col}' not found"}), 400
+        
+        df_clean = df.dropna(subset=required_cols)
+        
+        country_year_loss = df_clean.groupby(['Country', 'Year'])['Financial Loss (in Million $)'].sum().reset_index()
+        country_year_loss.columns = ['Country', 'Year', 'Loss']
+        
+        country_year_loss['Year'] = country_year_loss['Year'].astype(int)
+        country_year_loss = country_year_loss.sort_values(['Year', 'Country'])
+        
+        # 計算每個國家的總損失（用於排序）
+        total_loss_by_country = df_clean.groupby('Country')['Financial Loss (in Million $)'].sum().reset_index()
+        total_loss_by_country.columns = ['Country', 'TotalLoss']
+        
+        # 取得所有年份和國家
+        all_years = sorted(country_year_loss['Year'].unique().tolist())
+        all_countries = country_year_loss['Country'].unique().tolist()
+        
+        # 為每個年份準備資料
+        data_by_year = {}
+        for year in all_years:
+            year_data = country_year_loss[country_year_loss['Year'] == year]
+            data_by_year[str(year)] = {
+                'countries': year_data['Country'].tolist(),
+                'losses': year_data['Loss'].tolist()
             }
-        )
+        
+        # 計算全局統計資訊
+        statistics = {
+            'total_loss': float(df_clean['Financial Loss (in Million $)'].sum()),
+            'avg_loss_per_country': float(total_loss_by_country['TotalLoss'].mean()),
+            'max_loss_country': total_loss_by_country.nlargest(1, 'TotalLoss')['Country'].values[0],
+            'max_loss_value': float(total_loss_by_country.nlargest(1, 'TotalLoss')['TotalLoss'].values[0]),
+            'year_range': f"{min(all_years)} - {max(all_years)}",
+            'total_countries': len(all_countries)
+        }
+
+        return jsonify({
+            'years': all_years,
+            'data_by_year': data_by_year,
+            'all_countries': all_countries,
+            'statistics': statistics
+        })
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"Map API Error: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route("/api/industry_analysis")

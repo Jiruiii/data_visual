@@ -4,20 +4,58 @@
 <div class="container">
     <div class="content-container">
         <div class="page-header">
-            <h1><i class="fas fa-globe"></i> 全球攻擊來源地圖分析</h1>
-            <p>視覺化呈現網路攻擊的地理分布情況</p>
+            <h1><i class="fas fa-globe"></i> 全球網路攻擊財務損失地圖分析</h1>
+            <p>視覺化呈現各國網路攻擊造成的財務損失時序變化 (2015-2024)</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4" id="map-stats" style="display: none;">
+            <div class="col-md-3">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">總財務損失</h6>
+                        <h4 id="total-loss" class="text-danger">-</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">國家平均損失</h6>
+                        <h4 id="avg-loss" class="text-warning">-</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">損失最高國家</h6>
+                        <h4 id="max-country" class="text-primary">-</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="text-muted">最高損失金額</h6>
+                        <h4 id="max-loss" class="text-success">-</h4>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Map Chart -->
         <div class="chart-container">
             <h3 class="chart-title">
-                <i class="fas fa-map-marked-alt"></i> 攻擊來源國分布圖
+                <i class="fas fa-map-marked-alt"></i> 各國網路攻擊財務損失分布圖（年度動畫）
             </h3>
+
             <div class="alert alert-info">
                 <i class="fas fa-info-circle"></i> 
-                <strong>圖表說明：</strong>此地圖顯示全球各國作為攻擊來源的次數分布，
-                顏色越深表示該國發起的攻擊次數越多。請將滑鼠移至各國家上方查看詳細資訊。
+                <strong>圖表說明：</strong>此地圖顯示全球各國因網路攻擊造成的財務損失（百萬美元），
+                顏色越深表示該國的損失金額越高。使用下方的 Play 按鈕或滑桿可觀察 2015-2024 年的變化趨勢。
             </div>
+            
             <div id="map-chart" class="loading">
                 <div class="spinner-border" role="status">
                     <span class="visually-hidden">Loading...</span>
@@ -30,51 +68,64 @@
             <h3><i class="fas fa-eye"></i> 視覺化觀察與分析</h3>
             <div class="card border-0 shadow">
                 <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-search"></i> 從地圖可以觀察到：</h5>
+                    <h5 class="card-title"><i class="fas fa-search"></i> 從動態地圖可以觀察到：</h5>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
-                            <strong>地理分布特徵：</strong>
-                            網路攻擊來源主要集中在網路基礎建設較發達的國家和地區
+                            <strong>時間演變趨勢：</strong>
+                            透過年度動畫可以清楚看到財務損失如何隨時間變化，
+                            是逐年上升、下降還是波動變化
                         </li>
                         <li class="list-group-item">
-                            <strong>高風險區域：</strong>
-                            某些特定國家顯示出異常高的攻擊來源次數，可能是因為：
+                            <strong>地理分布特徵：</strong>
+                            財務損失主要集中在經濟發達國家和數位化程度高的地區，
+                            反映出這些國家的攻擊目標價值較高
+                        </li>
+                        <li class="list-group-item">
+                            <strong>高風險區域識別：</strong>
+                            某些國家持續呈現深色（高損失），表示這些地區面臨持續的網路安全威脅：
                             <ul class="mt-2">
-                                <li>該國網路人口基數大</li>
-                                <li>存在組織化的網路犯罪團體</li>
-                                <li>網路安全法規相對寬鬆</li>
-                                <li>經濟或政治因素驅動</li>
+                                <li>關鍵基礎設施遭受攻擊</li>
+                                <li>大型企業數據洩露事件</li>
+                                <li>勒索軟體攻擊頻繁</li>
+                                <li>金融科技產業發達導致攻擊收益高</li>
                             </ul>
                         </li>
                         <li class="list-group-item">
-                            <strong>時間趨勢：</strong>
-                            結合時間序列資料可發現，攻擊來源的地理分布隨著時間推移有所變化，
-                            反映出網路威脅的動態性質
+                            <strong>年度變化洞察：</strong>
+                            觀察特定年份的顏色突變，可能與該年度發生的重大網路安全事件相關
+                            （如 WannaCry、NotPetya 等全球性攻擊）
                         </li>
                         <li class="list-group-item">
-                            <strong>資安啟示：</strong>
-                            了解攻擊來源的地理分布，有助於企業和組織制定針對性的防禦策略，
-                            例如針對高風險地區加強防火牆規則和 IP 封鎖機制
+                            <strong>經濟影響評估：</strong>
+                            財務損失地圖直接展現網路攻擊對各國經濟的實際衝擊，
+                            有助於政府和企業評估網路安全投資的必要性
+                        </li>
+                        <li class="list-group-item">
+                            <strong>比較分析：</strong>
+                            對比不同國家的損失金額，可以發現哪些國家的網路防禦較為有效，
+                            哪些國家需要加強資安建設
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Why Map Visualization -->
+        <!-- Why Animated Map Visualization -->
         <div class="alert alert-success mt-4">
-            <h5><i class="fas fa-question-circle"></i> 為什麼選擇地圖視覺化？</h5>
-            <p class="mb-0">
-                地圖視覺化能夠直觀地展現資料的<strong>地理分布特徵</strong>，讓觀眾快速理解：
+            <h5><i class="fas fa-question-circle"></i> 為什麼選擇動態地圖視覺化？</h5>
+            <p class="mb-2">
+                動態地圖視覺化結合了<strong>空間分布</strong>和<strong>時間序列</strong>兩個維度，提供更豐富的資訊：
             </p>
-            <ul class="mt-2 mb-0">
-                <li>哪些國家是主要的攻擊來源</li>
-                <li>攻擊活動的全球分布情況</li>
-                <li>不同地區的相對威脅程度</li>
-                <li>地緣政治因素對網路安全的影響</li>
+            <ul class="mt-2 mb-2">
+                <li><strong>直觀展示趨勢：</strong>動畫能直觀呈現財務損失隨時間的演變</li>
+                <li><strong>空間比較：</strong>地圖格式便於進行跨國比較和地區性分析</li>
+                <li><strong>發現規律：</strong>透過時間軸播放，容易發現週期性模式或突發事件</li>
+                <li><strong>互動探索：</strong>使用者可以暫停、回放、選擇特定年份進行深入分析</li>
+                <li><strong>視覺衝擊：</strong>顏色變化的動態效果更能引起注意和記憶</li>
             </ul>
-            <p class="mt-2 mb-0">
-                相比單純的列表或表格，地圖能提供更好的<strong>視覺記憶點</strong>和<strong>空間關聯性</strong>。
+            <p class="mb-0">
+                相比靜態圖表或表格，<strong>動態地圖</strong>能同時呈現「何地」、「何時」、「多少」三個關鍵資訊，
+                是分析全球網路安全財務損失的理想工具。
             </p>
         </div>
     </div>
@@ -83,26 +134,83 @@
 
 {% block extra_js %}
 <script>
-    // Load map data and render with Plotly.js
+    // Load map data and render with Plotly.js Animation
     async function loadMapData() {
         const chartDiv = document.getElementById('map-chart');
         try {
             const response = await fetch('/api/map_data');
-            const data = await response.json();
+            const mapData = await response.json();
+            
+            if (mapData.error) {
+                throw new Error(mapData.error);
+            }
+            
+            // Update global statistics
+            updateGlobalStatistics(mapData.statistics);
             
             chartDiv.classList.remove('loading');
             chartDiv.innerHTML = '';
             
-            // Create choropleth map using Plotly.js
-            const trace = {
+            // Prepare frames and slider steps
+            const frames = [];
+            const sliderSteps = [];
+            
+            // Calculate global min/max for consistent color scale
+            let allLosses = [];
+            mapData.years.forEach(year => {
+                const yearData = mapData.data_by_year[year.toString()];
+                if (yearData && yearData.losses) {
+                    allLosses = allLosses.concat(yearData.losses);
+                }
+            });
+            const minLoss = Math.min(...allLosses);
+            const maxLoss = Math.max(...allLosses);
+            
+            // Create frames for each year
+            mapData.years.forEach((year, index) => {
+                const yearData = mapData.data_by_year[year.toString()];
+                
+                frames.push({
+                    name: year.toString(),
+                    data: [{
+                        locations: yearData.countries,
+                        z: yearData.losses,
+                        text: yearData.countries
+                    }]
+                });
+                
+                sliderSteps.push({
+                    label: year.toString(),
+                    method: 'animate',
+                    args: [[year.toString()], {
+                        mode: 'immediate',
+                        transition: { duration: 300 },
+                        frame: { duration: 300, redraw: true }
+                    }]
+                });
+            });
+            
+            // Initial data (first year)
+            const firstYearData = mapData.data_by_year[mapData.years[0].toString()];
+            const data = [{
                 type: 'choropleth',
-                locations: data.countries,
                 locationmode: 'country names',
-                z: data.counts,
-                text: data.countries,
-                colorscale: 'Reds',
+                locations: firstYearData.countries,
+                z: firstYearData.losses,
+                text: firstYearData.countries,
+                colorscale: [
+                    [0, 'rgb(247, 251, 255)'],
+                    [0.2, 'rgb(198, 219, 239)'],
+                    [0.4, 'rgb(158, 202, 225)'],
+                    [0.6, 'rgb(107, 174, 214)'],
+                    [0.8, 'rgb(49, 130, 189)'],
+                    [1, 'rgb(8, 81, 156)']
+                ],
                 autocolorscale: false,
                 reversescale: false,
+                zauto: false,
+                zmin: minLoss,
+                zmax: maxLoss,
                 marker: {
                     line: {
                         color: 'rgb(180,180,180)',
@@ -110,16 +218,22 @@
                     }
                 },
                 colorbar: {
-                    title: '攻擊次數',
-                    thickness: 15,
-                    len: 0.7
+                    title: {
+                        text: '財務損失<br>(百萬美元)',
+                        side: 'right'
+                    },
+                    thickness: 20,
+                    len: 0.7,
+                    tickformat: ',.0f',
+                    ticksuffix: 'M'
                 },
-                hovertemplate: '<b>%{text}</b><br>攻擊次數: %{z:,}<extra></extra>'
-            };
+                hovertemplate: '<b>%{text}</b><br>財務損失: $%{z:,.2f}M<extra></extra>'
+            }];
             
+            // Layout with animation controls
             const layout = {
                 title: {
-                    text: '全球網路安全事件分布圖 (2015-2024)',
+                    text: '全球網路攻擊財務損失分布<br>2015 - 2024',
                     font: {
                         family: 'Microsoft JhengHei, Arial',
                         size: 18
@@ -130,21 +244,79 @@
                     showcoastlines: true,
                     projection: {
                         type: 'natural earth'
-                    }
+                    },
+                    landcolor: 'rgb(217, 217, 217)',
+                    showland: true
                 },
-                height: 600,
+                height: 650,
                 font: {
                     family: 'Microsoft JhengHei, Arial',
                     size: 14
-                }
+                },
+                // Play/Pause buttons
+                updatemenus: [{
+                    x: 0.1,
+                    y: 0,
+                    yanchor: 'top',
+                    xanchor: 'right',
+                    showactive: false,
+                    direction: 'left',
+                    type: 'buttons',
+                    pad: { t: 87, r: 10 },
+                    buttons: [{
+                        method: 'animate',
+                        args: [null, {
+                            fromcurrent: true,
+                            transition: { duration: 300 },
+                            frame: { duration: 800, redraw: true }
+                        }],
+                        label: '▶ 播放'
+                    }, {
+                        method: 'animate',
+                        args: [[null], {
+                            mode: 'immediate',
+                            transition: { duration: 0 },
+                            frame: { duration: 0, redraw: false }
+                        }],
+                        label: '⏸ 暫停'
+                    }]
+                }],
+                // Year slider
+                sliders: [{
+                    active: 0,
+                    steps: sliderSteps,
+                    x: 0.1,
+                    len: 0.9,
+                    xanchor: 'left',
+                    y: 0,
+                    yanchor: 'top',
+                    pad: { t: 50, b: 10 },
+                    currentvalue: {
+                        visible: true,
+                        prefix: '年份: ',
+                        xanchor: 'right',
+                        font: {
+                            size: 20,
+                            color: '#666'
+                        }
+                    },
+                    transition: {
+                        duration: 300,
+                        easing: 'cubic-in-out'
+                    }
+                }]
             };
             
-            Plotly.newPlot('map-chart', [trace], layout, {
+            // Create plot and add frames
+            Plotly.newPlot('map-chart', data, layout, {
                 responsive: true,
                 displayModeBar: true,
                 modeBarButtonsToRemove: ['lasso2d', 'select2d'],
                 displaylogo: false
+            }).then(function() {
+                Plotly.addFrames('map-chart', frames);
             });
+            
         } catch (error) {
             console.error('Error loading map data:', error);
             chartDiv.classList.remove('loading');
@@ -153,13 +325,24 @@
         }
     }
 
+    // Update global statistics
+    function updateGlobalStatistics(stats) {
+        document.getElementById('total-loss').textContent = `$${stats.total_loss.toFixed(1)}M`;
+        document.getElementById('avg-loss').textContent = `$${stats.avg_loss_per_country.toFixed(1)}M`;
+        document.getElementById('max-country').textContent = stats.max_loss_country;
+        document.getElementById('max-loss').textContent = `$${stats.max_loss_value.toFixed(1)}M`;
+        document.getElementById('map-stats').style.display = 'flex';
+    }
+
     // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
         loadMapData();
         
         // Handle window resize
         window.addEventListener('resize', function() {
-            Plotly.Plots.resize('map-chart');
+            if (document.getElementById('map-chart').children.length > 0) {
+                Plotly.Plots.resize('map-chart');
+            }
         });
     });
 </script>
