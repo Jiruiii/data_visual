@@ -6,57 +6,66 @@
       <p>使用 Sankey 圖和 Treemap 進行深度資料探索</p>
     </div>
 
-    <!-- Sankey Diagram -->
     <div class="chart-container">
       <h3 class="chart-title">
-        <i class="fas fa-stream"></i> Sankey 圖：攻擊流向視覺化
+        <i class="fas fa-fire"></i> 熱力圖：各產業 × 攻擊類型的平均財務損失
       </h3>
+
       <div class="alert alert-primary">
-        <h6><i class="fas fa-info-circle"></i> 什麼是 Sankey 圖？</h6>
+        <h6><i class="fas fa-info-circle"></i> 什麼是熱力圖？</h6>
         <p>
-          Sankey
-          圖是一種<strong>流程圖</strong>，透過不同寬度的流動帶來表示數量的大小。
-          非常適合展現<strong>多層級關聯關係</strong>和<strong>流向分布</strong>。
+          熱力圖使用<strong>顏色深淺</strong>來表示數值大小，非常適合展示<strong>二維矩陣資料</strong>。
+          紅色越深表示財務損失越高，綠色表示損失較低。
         </p>
         <p class="mb-0">
-          <strong>本圖呈現：</strong>國家 → 攻擊類型 → 目標產業
-          三個層級的流向關係，
-          讓我們清楚看到「哪些國家發生哪些攻擊手法並影響哪些產業」。
+          <strong>本圖呈現：</strong
+          >橫軸是攻擊類型，縱軸是目標產業，每個格子的顏色代表該組合的平均財務損失。
+          可以快速識別「哪些產業面對哪些攻擊最脆弱」。
         </p>
       </div>
-      <div id="sankey-chart" class="loading">
+
+      <!-- Statistics Cards -->
+      <div id="heatmap-stats" class="mb-3" style="display: none"></div>
+
+      <div id="heatmap-chart" class="loading">
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
+
       <div class="mt-4">
-        <h6><i class="fas fa-eye"></i> 從 Sankey 圖可以觀察到：</h6>
+        <h6><i class="fas fa-eye"></i> 從熱力圖可以觀察到：</h6>
         <ul>
           <li>
-            <strong>攻擊路徑追蹤：</strong>
-            可以清楚看出特定國家發生哪種攻擊類型，以及這些攻擊主要影響哪些產業
+            <strong>高風險組合：</strong>
+            紅色區域代表「產業-攻擊」的高損失組合，例如金融業 ×
+            勒索軟體可能造成巨額損失
           </li>
           <li>
-            <strong>關聯性分析：</strong>
-            例如：某國家的勒索軟體攻擊主要影響金融業，顯示針對性攻擊的特徵
+            <strong>產業脆弱性：</strong>
+            某一行（產業）如果多數格子偏紅，表示該產業容易受到多種攻擊的高損失影響
           </li>
           <li>
-            <strong>資源分配：</strong>
-            流向的寬度代表攻擊次數，寬度越大表示該路徑的攻擊越頻繁，需要優先防禦
+            <strong>攻擊威脅性：</strong>
+            某一列（攻擊類型）如果多數格子偏紅，表示該攻擊對多個產業都造成嚴重財務損失
           </li>
           <li>
-            <strong>多維度洞察：</strong>
-            單一圖表同時展現三個維度（來源、手法、目標），比分開看三張圖更有整體感
+            <strong>防禦優先級：</strong>
+            最紅的區域應該是資安投資的首要目標
+          </li>
+          <li>
+            <strong>空白區域：</strong>
+            某些產業-攻擊組合可能沒有資料（顯示為淺色或空白），代表該攻擊不常針對該產業
           </li>
         </ul>
 
         <div class="alert alert-success mt-3">
-          <h6><i class="fas fa-lightbulb"></i> 為什麼選擇 Sankey 圖？</h6>
+          <h6><i class="fas fa-lightbulb"></i> 為什麼選擇熱力圖？</h6>
           <p class="mb-0">
-            相比傳統的表格或堆疊圖，Sankey
-            圖的<strong>視覺效果和故事性都超級強</strong>！
-            它不只展示資料，更展示資料之間的<strong>流動和關聯</strong>。
-            在網路安全領域，理解「哪些國家發生什麼攻擊、影響哪些產業」的完整路徑至關重要。
+            相比桑基圖的流向展示，熱力圖更適合<strong>量化比較</strong>！
+            它可以同時展示所有「產業 × 攻擊」組合的損失金額，
+            讓決策者快速找出需要重點防禦的領域。
+            而且顏色編碼比數字更直觀，特別適合在管理層簡報中使用。
           </p>
         </div>
       </div>
@@ -223,9 +232,7 @@
     </div>
   </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
+{% endblock %} {% block extra_js %}
 <!-- 引用外部 Plotly.js 圖表程式碼 -->
 <script src="{{ url_for('static', filename='js/advanced.js') }}"></script>
 {% endblock %}
