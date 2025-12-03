@@ -3,25 +3,20 @@
   <div class="content-container">
     <div class="page-header">
       <h1><i class="fas fa-project-diagram"></i> 進階視覺化分析</h1>
-      <p>使用 Sankey 圖和 Treemap 進行深度資料探索</p>
+      <p>使用 Heatmap 和 Treemap 進行深度資料探索與高風險組合識別</p>
     </div>
 
+    <!-- Heatmap Section -->
     <div class="chart-container">
       <h3 class="chart-title">
         <i class="fas fa-fire"></i> 熱力圖：各產業 × 攻擊類型的平均財務損失
       </h3>
 
-      <div class="alert alert-primary">
-        <h6><i class="fas fa-info-circle"></i> 什麼是熱力圖？</h6>
-        <p>
-          熱力圖使用<strong>顏色深淺</strong>來表示數值大小，非常適合展示<strong>二維矩陣資料</strong>。
-          紅色越深表示財務損失越高，綠色表示損失較低。
-        </p>
-        <p class="mb-0">
-          <strong>本圖呈現：</strong
-          >橫軸是攻擊類型，縱軸是目標產業，每個格子的顏色代表該組合的平均財務損失。
-          可以快速識別「哪些產業面對哪些攻擊最脆弱」。
-        </p>
+      <!-- 簡短圖表說明 -->
+      <div class="alert alert-info mb-3">
+        <i class="fas fa-info-circle"></i>
+        <strong>圖表說明：</strong>此熱力圖展示不同產業面對各種攻擊類型時的平均財務損失。
+        <strong>顏色越深</strong>代表損失越高，可快速識別需要優先防護的「產業-攻擊」組合。
       </div>
 
       <!-- Statistics Cards -->
@@ -59,41 +54,59 @@
           </li>
         </ul>
 
-        <div class="alert alert-success mt-3">
-          <h6><i class="fas fa-lightbulb"></i> 為什麼選擇熱力圖？</h6>
-          <p class="mb-0">
-            相比桑基圖的流向展示，熱力圖更適合<strong>量化比較</strong>！
-            它可以同時展示所有「產業 × 攻擊」組合的損失金額，
-            讓決策者快速找出需要重點防禦的領域。
-            而且顏色編碼比數字更直觀，特別適合在管理層簡報中使用。
-          </p>
+        <!-- 什麼是熱力圖 -->
+        <div class="card border-primary mb-3">
+          <div class="card-header bg-primary text-white">
+            <h6 class="mb-0"><i class="fas fa-question-circle"></i> 什麼是熱力圖 (Heatmap)？</h6>
+          </div>
+          <div class="card-body">
+            <ul class="mb-0">
+              <li>使用<strong>顏色深淺</strong>來表示數值大小的視覺化方式</li>
+              <li>非常適合展示<strong>二維矩陣資料</strong>（如：產業 × 攻擊類型）</li>
+              <li>本圖呈現：橫軸 = 攻擊類型，縱軸 = 目標產業</li>
+              <li>每個格子的顏色代表該組合的平均財務損失</li>
+              <li>紅色越深 = 損失越高，綠色 = 損失較低</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 為什麼選擇熱力圖 -->
+        <div class="card border-success">
+          <div class="card-header bg-success text-white">
+            <h6 class="mb-0"><i class="fas fa-lightbulb"></i> 為什麼選擇熱力圖？</h6>
+          </div>
+          <div class="card-body">
+            <ul class="mb-0">
+              <li><strong>快速識別極值：</strong>一眼看出最高/最低損失的組合</li>
+              <li><strong>模式發現：</strong>輕鬆發現哪些產業或攻擊類型整體風險較高</li>
+              <li><strong>對比直觀：</strong>顏色對比比數字更容易理解</li>
+              <li><strong>空間效率：</strong>在有限空間內展示大量資料點</li>
+              <li><strong>決策支援：</strong>幫助資安團隊決定資源投入的優先順序</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Treemap -->
-    <div class="chart-container">
+    <!-- Treemap Section -->
+    <div class="chart-container mt-5">
       <h3 class="chart-title">
         <i class="fas fa-th"></i> Treemap：目標產業與攻擊類型分布
       </h3>
-      <div class="alert alert-primary">
-        <h6><i class="fas fa-info-circle"></i> 什麼是 Treemap (樹狀圖)？</h6>
-        <p>
-          Treemap
-          使用<strong>巢狀矩形</strong>來展示層級資料，矩形的大小代表數值的大小。
-          非常適合展現<strong>部分與整體的關係</strong>和<strong>階層結構</strong>。
-        </p>
-        <p class="mb-0">
-          <strong>本圖呈現：</strong
-          >每個產業遭受的攻擊次數，以及該產業下不同攻擊類型的分布。 大矩形 =
-          該產業被攻擊次數多，內部小矩形 = 不同攻擊類型的佔比。
-        </p>
+
+      <!-- 簡短圖表說明 -->
+      <div class="alert alert-info mb-3">
+        <i class="fas fa-info-circle"></i>
+        <strong>圖表說明：</strong>此 Treemap 以<strong>矩形大小</strong>表示各產業遭受攻擊的次數。
+        矩形越大代表該產業被攻擊越頻繁，內部子區塊顯示不同攻擊類型的分布比例。
       </div>
+
       <div id="treemap-chart" class="loading">
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
+
       <div class="mt-4">
         <h6><i class="fas fa-eye"></i> 從 Treemap 可以觀察到：</h6>
         <ul>
@@ -121,20 +134,44 @@
           </li>
         </ul>
 
-        <div class="alert alert-success mt-3">
-          <h6><i class="fas fa-lightbulb"></i> 為什麼選擇 Treemap？</h6>
-          <p class="mb-0">
-            Treemap 最大的優勢是<strong>一圖多訊</strong>（One view, multiple
-            insights）！ 它同時展示：(1) 哪個產業被攻擊最多 (2)
-            該產業遭受哪些類型攻擊 (3) 各攻擊類型的佔比。
-            而且視覺效果超級吸睛，很適合在簡報中使用，讓觀眾快速抓住重點。
-          </p>
+        <!-- 什麼是 Treemap -->
+        <div class="card border-primary mb-3">
+          <div class="card-header bg-primary text-white">
+            <h6 class="mb-0"><i class="fas fa-question-circle"></i> 什麼是 Treemap (樹狀圖)？</h6>
+          </div>
+          <div class="card-body">
+            <ul class="mb-0">
+              <li>使用<strong>巢狀矩形</strong>來展示層級資料的視覺化方式</li>
+              <li>矩形的<strong>大小</strong>代表數值的大小（如：攻擊次數）</li>
+              <li>非常適合展現<strong>部分與整體的關係</strong>和<strong>階層結構</strong></li>
+              <li>本圖呈現：外層大矩形 = 產業，內層小矩形 = 攻擊類型</li>
+              <li>一眼看出：(1) 哪個產業被攻擊最多 (2) 該產業遭受哪些攻擊</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 為什麼選擇 Treemap -->
+        <div class="card border-success">
+          <div class="card-header bg-success text-white">
+            <h6 class="mb-0"><i class="fas fa-lightbulb"></i> 為什麼選擇 Treemap？</h6>
+          </div>
+          <div class="card-body">
+            <ul class="mb-0">
+              <li><strong>一圖多訊：</strong>同時展示產業攻擊量、攻擊類型分布、佔比關係</li>
+              <li><strong>層級清晰：</strong>巢狀結構讓「整體-部分」關係一目了然</li>
+              <li><strong>比例直觀：</strong>面積大小直接反映數量多寡</li>
+              <li><strong>互動探索：</strong>可點擊深入查看各產業的攻擊細節</li>
+              <li><strong>視覺吸睛：</strong>適合用於簡報，快速抓住觀眾注意力</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-{% endblock %} {% block extra_js %}
+{% endblock %} 
+
+{% block extra_js %}
 <!-- 引用外部 Plotly.js 圖表程式碼 -->
 <script src="{{ url_for('static', filename='js/advanced.js') }}"></script>
 {% endblock %}
