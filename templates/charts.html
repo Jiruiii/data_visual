@@ -79,8 +79,8 @@
                     <li><strong>主流威脅：</strong>佔比最大的攻擊類型反映當前最普遍的網路威脅手法</li>
                     <li><strong>多樣性：</strong>攻擊類型的多樣化程度顯示威脅環境的複雜性</li>
                     <li><strong>DDoS 攻擊：</strong>分散式阻斷服務攻擊，影響範圍廣</li>
-                    <li><strong>Phishing 釣魚攻擊：</strong>透過社交工程誘騙用戶，出現頻率高</li>
-                    <li><strong>Ransomware 勒索軟體：</strong>針對性較強，財務損失往往最高</li>
+                    <li><strong>Phishing 釣魚攻擊：</strong>透過社交工程誘騙用戶，出現頻率次高</li>
+                    <li><strong>Ransomware 勒索軟體：</strong>針對性較強，財務損失往往高</li>
                     <li><strong>SQL Injection：</strong>針對資料庫的攻擊，危害性高</li>
                 </ul>
             </div>
@@ -127,11 +127,12 @@
             <div class="mt-3">
                 <h6><i class="fas fa-lightbulb"></i> 觀察重點：</h6>
                 <ul>
-                    <li><strong>效率比較：</strong>中位數較低的防禦方法通常更有效率</li>
-                    <li><strong>一致性分析：</strong>盒子較小的防禦方法表示解決時間較穩定</li>
-                    <li><strong>異常值識別：</strong>圖中的點顯示異常長或短的解決時間</li>
-                    <li><strong>方法選擇：</strong>綜合考慮平均時間和變異程度選擇最佳防禦策略</li>
-                    <li><strong>資源配置：</strong>高變異的方法可能需要更多資源投入</li>
+                    <li><strong>Firewall 效率最佳：</strong>中位數34小時，為所有防禦方法中最快，顯示其快速阻擋威脅的優勢</li>
+                    <li><strong>整體表現相近：</strong>五種防禦方法的平均解決時間都在35-37小時區間，差異不大</li>
+                    <li><strong>變異性比較：</strong>Antivirus變異性最小（四分位距34小時），VPN次之（34.25小時），表現較穩定</li>
+                    <li><strong>Encryption和Firewall變異性最大：</strong>四分位距達38小時，解決時間波動較大</li>
+                    <li><strong>數據分布均勻：</strong>所有方法的時間範圍都是1-72小時，顯示各防禦技術在不同情境下的適用性</li>
+                    <li><strong>沒有明顯劣勢方法：</strong>各防禦機制都有其效用，選擇應考慮具體威脅類型和環境需求</li>
                 </ul>
             </div>
         </div>
@@ -178,10 +179,11 @@
                             盒鬚圖的優勢
                         </h5>
                         <ul class="small">
-                            <li>顯示數據分布情況</li>
-                            <li>識別異常值和離群點</li>
-                            <li>比較不同組別的差異</li>
-                            <li>評估數據變異程度</li>
+                            <li>一目了然的五數摘要（最小值、Q1、中位數、Q3、最大值）</li>
+                            <li>快速比較多組數據的中心趨勢和離散程度</li>
+                            <li>直觀識別異常值和極端情況</li>
+                            <li>評估防禦方法的穩定性和可預測性</li>
+                            <li>適合大量數據的統計分析和決策支援</li>
                         </ul>
                     </div>
                 </div>
