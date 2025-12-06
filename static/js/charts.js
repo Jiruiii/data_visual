@@ -143,6 +143,10 @@ async function loadAttackTypes() {
             },
             textinfo: 'label+percent',
             textposition: 'auto',
+            insidetextorientation: 'horizontal',
+            textfont: {
+                size: 11
+            },
             hovertemplate: '<b>%{label}</b><br>數量: %{value}<br>佔比: %{percent}<extra></extra>'
         };
 
@@ -151,8 +155,14 @@ async function loadAttackTypes() {
                 text: '不同攻擊類型佔比分析',
                 font: { family: 'Microsoft JhengHei, Arial', size: 16 }
             },
-            height: 500,
-            font: { family: 'Microsoft JhengHei, Arial', size: 12 }
+            height: 550,
+            font: { family: 'Microsoft JhengHei, Arial', size: 12 },
+            // margin: {
+            //     l: 100,
+            //     r: 100,
+            //     t: 80,
+            //     b: 80
+            // }
         };
 
         Plotly.newPlot('attack-types-chart', [trace], layout, { responsive: true, displayModeBar: true });
