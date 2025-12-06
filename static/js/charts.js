@@ -1,6 +1,5 @@
 /**
- * 基本圖表頁面 - Plotly.js 圖表
- * Charts page - Bar, Pie, Box plots
+ * 基本圖表頁面-box pie bar chart
  */
 
 let currentIndustryChart = 'count';
@@ -26,9 +25,7 @@ function switchIndustryChart(type) {
     loadIndustryChart();
 }
 
-/**
- * 載入產業分析橫向長條圖
- */
+// 載入bar chart
 async function loadIndustryChart() {
     const chartDiv = document.getElementById('industry-chart');
     try {
@@ -118,9 +115,7 @@ async function loadIndustryChart() {
     }
 }
 
-/**
- * 載入攻擊類型圓餅圖
- */
+// 載入園餅圖
 async function loadAttackTypes() {
     const chartDiv = document.getElementById('attack-types-chart');
     try {
@@ -157,12 +152,6 @@ async function loadAttackTypes() {
             },
             height: 550,
             font: { family: 'Microsoft JhengHei, Arial', size: 12 },
-            // margin: {
-            //     l: 100,
-            //     r: 100,
-            //     t: 80,
-            //     b: 80
-            // }
         };
 
         Plotly.newPlot('attack-types-chart', [trace], layout, { responsive: true, displayModeBar: true });
@@ -173,9 +162,7 @@ async function loadAttackTypes() {
     }
 }
 
-/**
- * 載入防禦方法與解決時間盒鬚圖
- */
+// 載入盒鬚圖
 async function loadDefenseResolution() {
     const chartDiv = document.getElementById('defense-resolution-chart');
     try {
@@ -245,10 +232,7 @@ async function loadDefenseResolution() {
             }
         };
 
-        Plotly.newPlot('defense-resolution-chart', traces, layout, {
-            responsive: true,
-            displayModeBar: true
-        });
+        Plotly.newPlot('defense-resolution-chart', traces, layout);
 
         // 更新統計表格
         updateDefenseStatsTable(data.statistics);
@@ -284,9 +268,7 @@ function updateDefenseStatsTable(statistics) {
     });
 }
 
-/**
- * 初始化圖表頁面
- */
+//把圖表載入方法包在一起
 function initChartsPage() {
     loadIndustryChart();
     loadAttackTypes();
